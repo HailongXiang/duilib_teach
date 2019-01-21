@@ -1,7 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Window size="300,300" sizebox="5,5,5,5">  
-	<!--自动拉伸的控件演示-->
-    <Container bordersize="1" bordercolor="0xFFFF0000" inset="1,1,1,1">  
-        <Control bkcolor="#FFFFFF00" />  
-    </Container>  
-</Window>
+<?XML VERSION="1.0" ENCODING="UTF-8"?>
+<wINDOW SIZE="300,300" SIZEBOX="5,5,5,5">
+	<vERTICALlAYOUT BKCOLOR="#ffffffff">
+		<hORIZONTALlAYOUT HEIGHT="100">
+			<vERTICALlAYOUT BKCOLOR="#ffff0000" WIDTH="100">
+				<tEXT tEXT="1"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT BKCOLOR="#ff00ff00" WIDTH="100">
+				<tEXT TEXT="2"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT BKCOLOR="#ffff0000" WIDTH="100">
+				<tEXT TEXT="3"/>
+			</vERTICALlAYOUT>
+		</hORIZONTALlAYOUT>
+		<hORIZONTALlAYOUT HEIGHT="100">
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ffff0000">
+				<tEXT TEXT="4"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ffff0000">
+				<tEXT TEXT="5"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ff00ff00">
+				<tEXT TEXT="6"/>
+			</vERTICALlAYOUT>
+		</hORIZONTALlAYOUT>
+		<hORIZONTALlAYOUT HEIGHT="100">
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ff00ff00">
+				<tEXT TEXT="7"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ffff0000">
+				<tEXT TEXT="8" ALIGN="CENTER"/>
+			</vERTICALlAYOUT>
+			<vERTICALlAYOUT WIDTH="100" BKCOLOR="#ffff0000">
+				<tEXT TEXT="9"/>
+			</vERTICALlAYOUT>
+		</hORIZONTALlAYOUT>
+	</vERTICALlAYOUT>
+</wINDOW>

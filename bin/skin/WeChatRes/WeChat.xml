@@ -1,0 +1,63 @@
+<?XML VERSION="1.0" ENCODING="UTF-8"?>
+<Window SIZE="280,400"  maxinfo="280,400" mininfo="280,400" roundcorner="5,5"  caption="0,0,0,28" >
+  <VerticalLayout name="mainbk"  bkcolor="#fff5f5f5" >
+    <HorizontalLayout height="28">
+      <button name="btn_logo" bkimage="wechat_logo.png" padding="9,2,0,0" pos="0,0,24,24" tooltip="点击打开官网" />
+      <control />
+      <button name="btn_setting" width="35" normalimage="setting.png" hotimage="setting_hot.png" pushedimage="setting_pushed.png" pos="0,0,35,27" hotcolor="#ffcdcdcd" tooltip="设置背景" />
+      <button name="btn_return" visible="false" width="35" normalimage="return.png" hotimage="return_hot.png" pushedimage="return_pushed.png" pos="0,0,35,27" hotcolor="#ffcdcdcd" tooltip="返回首页" />
+      <button name="btn_close" width="35" normalimage="close.png" hotimage="close_hot.png" pushedimage="close_pushed.png" pos="0,0,35,27" hotcolor="#ffcdcdcd" tooltip="退出客户端" />
+    </HorizontalLayout>
+    <control height="77" />
+    
+    <VerticalLayout name="skinlayout" inset="100,0,100,0" visible="false" >
+      <button name="default" text="默认" bkcolor="#fff5f5f5" bordersize="1" bordercolor="#ffffe599" borderround="30,30" pos="0,0,100,30" />
+      <control height="20"/>
+      <button name="lightblue" text="浅蓝" bkcolor="#ffa4c2f4" bordersize="1" bordercolor="#ffffe599" borderround="30,30" pos="0,0,100,30" />
+      <control height="20"/>
+      <button name="green" text="绿色" bkcolor="#ffb6d7a8" bordersize="1" bordercolor="#ffffe599" borderround="30,30" pos="0,0,100,30" />
+      <control height="20"/>
+      <button name="red" text="粉色" bkcolor="#ffe6b8af" bordersize="1" bordercolor="#ffffe599" borderround="30,30" pos="0,0,100,30" />
+      <control height="20"/>
+      <button name="bkiamge" text="选择图片" bordersize="1" bordercolor="#ffffe599" bkcolor="#ffcdc9a5" borderround="30,30" pos="0,0,100,30" />
+    </VerticalLayout>
+    
+    <HorizontalLayout name="QRcodepage" visible="false" >
+      <control />
+      <!--<button name="btn_QRcode2" height="190" weidth="45" />
+      <ActiveX name="flash" clsid="{D27CDB6E-AE6D-11CF-96B8-444553540000}" mouse="true" enabled="true" height="190" width="190" />
+      <button name="btn_QRcode1" height="190" weidth="45" />-->
+      <button name="btn_QRcode" bkimage="二维码.png" pos="0,0,190,190" tooltip="请用手机扫描二维码登录客户端"/>
+      <!--<GifAnim bkimage="二维码.gif" autoplay="true" />-->
+      <!--<WebBrowser name="web" autonavi="true" />-->
+      <control />
+    </HorizontalLayout>
+    
+    <VerticalLayout name="loginpage" >
+      <HorizontalLayout height="90">
+        <control />
+        <button name="btn_changeimg" source="0,0,90,90" normalimage="file='头像.jpg'" width="90" pos="0,0,90,90" tooltip="点击更换头像"/>
+        <control />
+      </HorizontalLayout>
+
+      <control height="30" />
+      <HorizontalLayout height="20">
+        <control />
+        <edit name="edit" width="180" height="20" bkcolor="0x00000000"  tooltip="头像地址" /> 
+        <control />
+      </HorizontalLayout>
+
+      <control height="16" />
+      <HorizontalLayout >
+        <control />
+        <button name="btn_login" bkcolor="#ff1aad19" normalimage="login.png" hotimage="login_hot.png" width="210" height="41"  textcolor="#fff5f5f5" />
+        <control />
+      </HorizontalLayout>
+
+      <font id="0" size="20" >
+        <text text="123123" id="3" />
+      </font>
+    </VerticalLayout>
+  </VerticalLayout>
+</Window>
+
