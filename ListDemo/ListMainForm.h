@@ -1,14 +1,22 @@
 #pragma once
 
+/*
+* Code By Tojen (qq:342269237)
+* 界面设计图片资源80%原创，布局完全原创,学习作品，不好请拍砖
+*/
 #include <objbase.h>
 #include <zmouse.h>
 #include <exdisp.h>
 #include <comdef.h>
 #include <vector>
 #include <sstream>
+#include <io.h>
+#include <shellapi.h>
 
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
+
+
 
 using namespace DuiLib;
 
@@ -41,14 +49,12 @@ public:
 	CDuiString GetSkinFolder()
 	{
 
-		return _T("skin\\ListRes\\");
+		return _T("skin\\WeChatRes\\");
 	}
-
 
 	CDuiString GetSkinFile()
 	{
-		//return _T("skin.xml");
-		return _T("2.xml");
+		return _T("WeChat.xml");
 	}
 
     LPCTSTR GetWindowClassName() const 
@@ -74,8 +80,20 @@ public:
     }
 
 	static DWORD WINAPI Search(LPVOID lpParameter);
+
+	void Login();
 	
+	void ChangeImg();
+
+	//void SetImagePath();
+
 	void OnSearch();
+
+	void Changebk(DWORD control)
+	{
+		m_pMainbk->SetBkColor(control);
+		m_pMainbk->SetBkImage(_T("透明.png"));
+	}
  
 	LPCTSTR GetItemText(CControlUI* pControl, int iIndex, int iSubItem);
 
@@ -141,5 +159,23 @@ private:
     CButtonUI* m_pRestoreBtn;
     CButtonUI* m_pMinBtn;
     CButtonUI* m_pSearch;
+    CButtonUI* m_pChangeimg;
+    CButtonUI* m_pQRcode;
+    CButtonUI* m_pLogo;
+    CButtonUI* m_pSetting;
+    CButtonUI* m_pReturn;
+    CButtonUI* m_pbkc_default;
+	CButtonUI* m_pbkc_lightblue;
+	CButtonUI* m_pbkc_green;
+	CButtonUI* m_pbkc_red;
+	CButtonUI* m_pbkc_bkiamge;
+    CEditUI* m_pEdit;
+    CHorizontalLayoutUI* m_pLogin;
+    CHorizontalLayoutUI* m_pQRcodepage;
+    CVerticalLayoutUI* m_pSkinlayout;
+    CVerticalLayoutUI* m_pLoginpage;
+    CVerticalLayoutUI* m_pMainbk;
+
+	CWebBrowserUI* m_pWebBrowser;
 
 };

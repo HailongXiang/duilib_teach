@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ListMainForm.h"
 #include "MenuWnd.h"
-
+#include "flash10a.tlh"
 
 #include <objbase.h>   //思考此处为何把#include分段
 #include <zmouse.h>
@@ -10,6 +10,12 @@
 #include <vector>
 #include <sstream>
 
+#include <iostream>
+#include <windows.h>  
+#include <commdlg.h>  
+
+
+using namespace std;
 
 using namespace DuiLib;
 
@@ -26,20 +32,41 @@ std::vector<std::string> domain;
 */
 std::vector<std::string> desc;
 
-
+std::vector<std::string> edit;
 
 /**
 初始化UI控件
 */
 void ListMainForm::Init()
 {
-	m_pCloseBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("closebtn")));
+	m_pCloseBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_close")));
 	//static_cast 强制类型转换，_T 可以搜索文档16.2小节
-
 	m_pMaxBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("maxbtn")));
 	m_pRestoreBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("restorebtn")));
 	m_pMinBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("minbtn")));
 	m_pSearch = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_search")));
+
+	m_pChangeimg = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_changeimg")));
+	m_pQRcode = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_QRcode")));
+	m_pLogo = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_logo")));
+	m_pSetting = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_setting")));
+	m_pReturn = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_return")));
+
+	m_pbkc_default = static_cast<CButtonUI*>(m_pm.FindControl(_T("default")));
+	m_pbkc_lightblue = static_cast<CButtonUI*>(m_pm.FindControl(_T("lightblue")));
+	m_pbkc_green = static_cast<CButtonUI*>(m_pm.FindControl(_T("green")));
+	m_pbkc_red = static_cast<CButtonUI*>(m_pm.FindControl(_T("red")));
+	m_pbkc_bkiamge = static_cast<CButtonUI*>(m_pm.FindControl(_T("bkiamge")));
+
+	m_pLogin = static_cast<CHorizontalLayoutUI*>(m_pm.FindControl(_T("btn_login")));
+	m_pSkinlayout = static_cast<CVerticalLayoutUI*>(m_pm.FindControl(_T("skinlayout")));
+	m_pLoginpage = static_cast<CVerticalLayoutUI*>(m_pm.FindControl(_T("loginpage")));
+	m_pMainbk = static_cast<CVerticalLayoutUI*>(m_pm.FindControl(_T("mainbk")));
+	m_pQRcodepage = static_cast<CHorizontalLayoutUI*>(m_pm.FindControl(_T("QRcodepage")));
+
+	m_pEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("edit")));
+
+	m_pWebBrowser = static_cast<CWebBrowserUI*>(m_pm.FindControl(_T("web")));
 }
 
 /**
@@ -99,7 +126,7 @@ DWORD WINAPI ListMainForm::Search(LPVOID lpParameter)
 			*/
 			::Sleep(100);
 		}
-
+		
 		delete prama;//一定要删除这个变量，否则会造成内存泄漏，new Prama和delete要成对出现
 
 
@@ -112,33 +139,62 @@ DWORD WINAPI ListMainForm::Search(LPVOID lpParameter)
 	}
 }
 
+
+
+void ListMainForm::Login()
+{
+	::MessageBox(NULL, "登录成功", _T("提示"), MB_OK);
+	SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+	WinExec("D:\\c++Study\\duilib_new\\duilib_teach\\bin\\QQDemo.exe", SW_SHOW);
+}
+
+
+LPTSTR GetImgPath() {
+	OPENFILENAME ofn;
+	char szFile[1000];
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0" "PNG(*.png)\0*.png\0" "BMP(*.bmp)\0*.bmp\0" "JPEG(*.jpg,*.jpeg)\0*.jpg;*.jpeg\0" "GIF(*.gif)\0*.gif\0";
+
+	LPTSTR path_image;
+	if (GetOpenFileName(&ofn)) {
+		path_image = ofn.lpstrFile;
+		return path_image;
+	}
+	else {
+		return 0;
+	}
+}
+
+
+void ListMainForm::ChangeImg()
+{
+	LPTSTR path_image = 0;
+	CDuiString path_temp = m_pEdit->GetText();
+	if (!access(path_temp, 0))
+	{
+		m_pChangeimg->SetNormalImage(path_temp);
+		m_pEdit->SetText(_T("    恭喜你！头像更换成功"));
+	}
+	else
+		path_image = GetImgPath();
+
+	if (path_image != 0)
+	{
+		m_pChangeimg->SetNormalImage(_T(path_image));
+		m_pEdit->SetText(_T("地址:") + _bstr_t(path_image));
+	}
+	else if(path_image == 0 && access(path_temp, 0) == -1)
+		m_pEdit->SetText(_T("    请选择正确的图片路径哦"));
+}
+
 /***
-*课程1 修改皮肤xml文件,对照“属性列表.xml”学习当前皮肤中使用了哪些属性和控件
-自行修改属性，观察结果，查找并解答注释中的TODO和提问
+*TODO 编写函数在点击search按钮之后当前窗口围绕左上角旋转，旋转半径为50，考虑多线程，定时器
+
 */
-
-
-/***
-*课程2 编写函数在点击search按钮之后当前窗口围绕左上角旋转，旋转半径为50，考虑多线程，定时器
-*/
-
-
-/**
-* 课程3，学习布局，将《duilib入门和xml培训布局案例》文件夹中的布局文件全部拷贝到skin\\ListRes\\中，
-然后修改 	CDuiString GetSkinFile() 的代码来切换布局文件，
-要求自己编写要给复杂的包含垂直布局，水平布局组合的Ui文件，同时修改窗口圆角，等等熟悉，发挥自己的创作醒性
-*/
-
-/***
-* 课程4 ,模拟qq，或者微信登陆窗口输入用户名密码，请求web接口，验证用户名密码，然后校验
-
-自行安装node.js客户端，下载代码运行：
-https://github.com/Aliceljm1/NodeDemo.git
-
-自行搜索互联网资源查找libcurl的用发，发送HTTP请求
-https://gitee.com/search?utf8=%E2%9C%93&q=libcurl++demo&type=
-*/
-
 
 void ListMainForm::OnSearch()
 {
@@ -194,7 +250,7 @@ LPCTSTR  ListMainForm::GetItemText(CControlUI* pControl, int iIndex, int iSubIte
 	break;
 	case 2:
 	{
-#ifdef _UNICODE		
+#ifdef _UNICODE
 		int iLen = desc[iIndex].length();
 		LPWSTR lpText = new WCHAR[iLen + 1];
 		::ZeroMemory(lpText, (iLen + 1) * sizeof(WCHAR));
@@ -244,6 +300,71 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			OnSearch();
 		}
+		else if (msg.pSender == m_pChangeimg)
+		{
+			ChangeImg();
+		}
+		else if (msg.pSender == m_pLogo)
+		{
+			ShellExecute(NULL, _T("open"), _T("http://www.datedu.cn/"), NULL, NULL, SW_SHOW);
+		}
+		else if (msg.pSender == m_pLogin)
+		{
+			if (m_pQRcodepage) m_pQRcodepage->SetVisible(true);
+			if (m_pLoginpage) m_pLoginpage->SetVisible(false);
+
+			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+		}
+		else if (msg.pSender == m_pQRcode)
+		{
+			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+			if (m_pLoginpage) m_pLoginpage->SetVisible(true);
+
+			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+		}
+		else if (msg.pSender == m_pSetting)
+		{
+			if (m_pLoginpage) m_pLoginpage->SetVisible(false);
+			if (m_pSkinlayout) m_pSkinlayout->SetVisible(true);
+			if (m_pReturn) m_pReturn->SetVisible(true);
+			if (m_pSetting) m_pSetting->SetVisible(false);
+
+			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+		}
+		else if (msg.pSender == m_pReturn)
+		{
+			if (m_pLoginpage) m_pLoginpage->SetVisible(true);
+			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+			if (m_pReturn) m_pReturn->SetVisible(false);
+			if (m_pSetting) m_pSetting->SetVisible(true);
+
+			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+		}
+		else if (msg.pSender == m_pbkc_default)
+		{
+			Changebk(m_pbkc_default->GetBkColor());
+			//m_pMainbk->SetBkColor(m_pbkc_default->GetBkColor());
+			/*m_pMainbk->SetBkImage(_T("透明.png"));*/
+		}
+		else if (msg.pSender == m_pbkc_lightblue)
+		{
+			Changebk(m_pbkc_lightblue->GetBkColor());
+		}
+		else if (msg.pSender == m_pbkc_green)
+		{
+			Changebk(m_pbkc_green->GetBkColor());
+		}
+		else if (msg.pSender == m_pbkc_red)
+		{
+			Changebk(m_pbkc_red->GetBkColor());
+		}
+		else if (msg.pSender == m_pbkc_bkiamge)
+		{
+			LPTSTR path_image;
+			path_image = GetImgPath();
+			if(path_image)
+			m_pMainbk->SetBkImage(_T(path_image));
+		}
 	}
 	else if (msg.sType == _T("setfocus"))
 	{
@@ -268,6 +389,23 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 #endif
 		::MessageBox(NULL, sMessage.GetData(), _T("提示(by tojen)"), MB_OK);
 	}
+
+	else if (msg.sType == _T("showactivex")) {
+		if (msg.pSender->GetName() != _T("flash")) return;
+		IShockwaveFlash* pFlash = NULL;
+		CActiveXUI* pActiveX = static_cast<CActiveXUI*>(msg.pSender);
+		pActiveX->GetControl(IID_IUnknown, (void**)&pFlash);
+		if (pFlash != NULL) {
+			pFlash->put_WMode(_bstr_t(_T("Transparent")));
+			pFlash->put_Movie(_bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\WeChatRes\\二维码.swf")));
+			pFlash->DisableLocalSecurity();
+			pFlash->put_AllowScriptAccess(L"always");
+			BSTR response;
+			pFlash->CallFunction(L"<invoke name=\"setButtonText\" returntype=\"xml\"><arguments><string>Click me!</string></arguments></invoke>", &response);
+			pFlash->Release();
+		}
+	}
+
 	else if (msg.sType == _T("menu"))
 	{
 		if (msg.pSender->GetName() != _T("domainlist")) return;
@@ -303,7 +441,9 @@ LRESULT  ListMainForm::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	LONG styleValue = ::GetWindowLong(*this, GWL_STYLE);
 	styleValue &= ~WS_CAPTION;
 	::SetWindowLong(*this, GWL_STYLE, styleValue | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+
 	
+
 	CDialogBuilder builder;
 	CDuiString strResourcePath = m_pm.GetResourcePath();
 	if (strResourcePath.IsEmpty())
@@ -320,8 +460,8 @@ LRESULT  ListMainForm::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	m_pm.AddNotifier(this);
 
 	Init();
-
 	SetTimer(this->m_hWnd, TIMER_ID_TEST, TIMER_TIME_TEST, 0);
+
 
 	return 0;
 }
@@ -364,11 +504,11 @@ LRESULT  ListMainForm::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	RECT rcClient;
 	::GetClientRect(*this, &rcClient);
 
-	if (!::IsZoomed(*this)) {
+	/*if (!::IsZoomed(*this)) {
 		RECT rcSizeBox = m_pm.GetSizeBox();
-		if (pt.y < rcClient.top + rcSizeBox.top) {
-			if (pt.x < rcClient.left + rcSizeBox.left) return HTTOPLEFT;
-			if (pt.x > rcClient.right - rcSizeBox.right) return HTTOPRIGHT;
+		if (pt.y-3 < rcClient.top + rcSizeBox.top) {
+			if (pt.x-3 < rcClient.left + rcSizeBox.left) return HTTOPLEFT;
+			if (pt.x+3 > rcClient.right - rcSizeBox.right) return HTTOPRIGHT;
 			return HTTOP;
 		}
 		else if (pt.y > rcClient.bottom - rcSizeBox.bottom) {
@@ -378,7 +518,7 @@ LRESULT  ListMainForm::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		}
 		if (pt.x < rcClient.left + rcSizeBox.left) return HTLEFT;
 		if (pt.x > rcClient.right - rcSizeBox.right) return HTRIGHT;
-	}
+	}*/
 
 	RECT rcCaption = m_pm.GetCaptionRect();
 	if (pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
@@ -447,16 +587,12 @@ LRESULT  ListMainForm::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	LRESULT lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	if (::IsZoomed(*this) != bZoomed) {
 		if (!bZoomed) {
-			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
-			if (pControl) pControl->SetVisible(false);
-			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
-			if (pControl) pControl->SetVisible(true);
+			if (m_pMaxBtn) m_pMaxBtn->SetVisible(false);
+			if (m_pRestoreBtn) m_pRestoreBtn->SetVisible(true);
 		}
 		else {
-			CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
-			if (pControl) pControl->SetVisible(true);
-			pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
-			if (pControl) pControl->SetVisible(false);
+			if (m_pMaxBtn) m_pMaxBtn->SetVisible(true);
+			if (m_pRestoreBtn) m_pRestoreBtn->SetVisible(false);
 		}
 	}
 	return lRes;
