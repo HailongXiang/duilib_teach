@@ -39,6 +39,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\bin\skin\WeChatRes\WeChat_logo.ico" />
+    <Image Include="..\bin\skin\wechatres\icon2.ico" />
   </ItemGroup>
 </Project>

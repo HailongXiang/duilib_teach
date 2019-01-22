@@ -184,22 +184,20 @@ void ListMainForm::ChangeImg()
 		m_pEdit->SetText(_T("    请选择正确的图片路径哦"));
 }
 
-
-
-
-
 void GetUrlReturn() {
 	CURL *curl;
 	CURLcode res;
+	
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
 	if (curl) {
-		//res = curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8081/login?username=ljm&pwd=111111");
-		res = curl_easy_setopt(curl, CURLOPT_URL, "http://www.baidu.com");
+		res = curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8081/login?username=ljm&pwd=111111");
+		//res = curl_easy_setopt(curl, CURLOPT_URL, "http://www.baidu.com");
 		//curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "username=ljm&pwd=111111");
 		res = curl_easy_perform(curl);
+		LPCSTR a = (LPCSTR)res;
 		if (res != CURLE_OK)
-			::MessageBox(NULL, _T("成功"), _T("123"), MB_OK);
+			::MessageBox(NULL, a, _T("123"), MB_OK);
 			//fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
 		curl_easy_cleanup(curl);
 	}
