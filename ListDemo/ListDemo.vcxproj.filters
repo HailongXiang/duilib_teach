@@ -24,6 +24,9 @@
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="kutfconv.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="flash10a.tlh">
