@@ -12,6 +12,9 @@
 #include <sstream>
 #include <io.h>
 #include <shellapi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include<Windows.h>
 
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
@@ -98,6 +101,24 @@ public:
 
 	//void SetImagePath();
 
+	void ShockWnd();
+
+	void OnLogin();
+
+	int DownloadQRC(char *msg);
+
+	string GetLoginUrlData();
+
+	string GetAccountInfo(string msg, string virtue);
+
+	void ClickBack();
+
+	void ClickSetting();
+
+	void ClickQRCioc();
+
+	void ColorTag();
+
 	void OnSearch();
 
 	void Changebk(DWORD control)
@@ -180,7 +201,10 @@ private:
 	CButtonUI* m_pbkc_green;
 	CButtonUI* m_pbkc_red;
 	CButtonUI* m_pbkc_bkiamge;
+	CButtonUI* m_pQRC_ioc;
     CEditUI* m_pEdit;
+    CEditUI* m_pUserName;
+    CEditUI* m_pPwd;
     CHorizontalLayoutUI* m_pLogin;
     CHorizontalLayoutUI* m_pQRcodepage;
     CVerticalLayoutUI* m_pSkinlayout;

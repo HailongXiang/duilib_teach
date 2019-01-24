@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ListMainForm.h"
 #include "MenuWnd.h"
 #include "flash10a.tlh"
@@ -16,24 +16,24 @@ using namespace DuiLib;
 #define TIMER_TIME_TEST 1000
 
 /*
-* ´æ·ÅµÚ¶şÁĞÊı¾İ
+* å­˜æ”¾ç¬¬äºŒåˆ—æ•°æ®
 */
 std::vector<std::string> domain;
 
 /*
-* ´æ·ÅµÚÈıÁĞÊı¾İ
+* å­˜æ”¾ç¬¬ä¸‰åˆ—æ•°æ®
 */
 std::vector<std::string> desc;
 
 std::vector<std::string> edit;
 
 /**
-³õÊ¼»¯UI¿Ø¼ş
+åˆå§‹åŒ–UIæ§ä»¶
 */
 void ListMainForm::Init()
 {
 	m_pCloseBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_close")));
-	//static_cast Ç¿ÖÆÀàĞÍ×ª»»£¬_T ¿ÉÒÔËÑË÷ÎÄµµ16.2Ğ¡½Ú
+	//static_cast å¼ºåˆ¶ç±»å‹è½¬æ¢ï¼Œ_T å¯ä»¥æœç´¢æ–‡æ¡£16.2å°èŠ‚
 	m_pMaxBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("maxbtn")));
 	m_pRestoreBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("restorebtn")));
 	m_pMinBtn = static_cast<CButtonUI*>(m_pm.FindControl(_T("minbtn")));
@@ -44,6 +44,7 @@ void ListMainForm::Init()
 	m_pLogo = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_logo")));
 	m_pSetting = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_setting")));
 	m_pReturn = static_cast<CButtonUI*>(m_pm.FindControl(_T("btn_return")));
+	m_pQRC_ioc = static_cast<CButtonUI*>(m_pm.FindControl(_T("QRCode_ico")));
 
 	m_pbkc_default = static_cast<CButtonUI*>(m_pm.FindControl(_T("default")));
 	m_pbkc_lightblue = static_cast<CButtonUI*>(m_pm.FindControl(_T("lightblue")));
@@ -58,24 +59,26 @@ void ListMainForm::Init()
 	m_pQRcodepage = static_cast<CHorizontalLayoutUI*>(m_pm.FindControl(_T("QRcodepage")));
 
 	m_pEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("edit")));
+	m_pUserName = static_cast<CEditUI*>(m_pm.FindControl(_T("uername")));
+	m_pPwd = static_cast<CEditUI*>(m_pm.FindControl(_T("password")));
 
 	m_pWebBrowser = static_cast<CWebBrowserUI*>(m_pm.FindControl(_T("web")));
 }
 
 /**
-*ÕâÊÇÒ»¸öÈ«¾Ö²âÊÔº¯Êı£¬²»ÊôÓÚListMainFormÀà¡£
-*Ò»¸öÀàÀïÃæµÄº¯ÊıÓ¦¸ÃºÍÀàÃÜÇĞÏà¹Ø£¬²»Ïà¸ÉµÄº¯ÊıĞèÒª³é³öµ½ÆäËûÀà»òÕßUtilsÖĞ
+*è¿™æ˜¯ä¸€ä¸ªå…¨å±€æµ‹è¯•å‡½æ•°ï¼Œä¸å±äºListMainFormç±»ã€‚
+*ä¸€ä¸ªç±»é‡Œé¢çš„å‡½æ•°åº”è¯¥å’Œç±»å¯†åˆ‡ç›¸å…³ï¼Œä¸ç›¸å¹²çš„å‡½æ•°éœ€è¦æŠ½å‡ºåˆ°å…¶ä»–ç±»æˆ–è€…Utilsä¸­
 *
 */
 void TestMemoryFunc()
 {
-	int* array = new int[10]; //Ê¹ÓÃvsÌá¹©µÄÄÚ´æ²é¿´¹¤¾ß¿ÉÒÔµÃÖª Êı×éµÄÄÚ´æÊÇÁ¬ĞøµÄ£¬¿ÉÒÔÍ¨¹ımemsetÀ´Í³Ò»³õÊ¼»¯ÄÚ´æ
+	int* array = new int[10]; //ä½¿ç”¨vsæä¾›çš„å†…å­˜æŸ¥çœ‹å·¥å…·å¯ä»¥å¾—çŸ¥ æ•°ç»„çš„å†…å­˜æ˜¯è¿ç»­çš„ï¼Œå¯ä»¥é€šè¿‡memsetæ¥ç»Ÿä¸€åˆå§‹åŒ–å†…å­˜
 	memset(array, 0x0F, sizeof(int) * 10);
 
 
 	char chInput[512];
-	sprintf(chInput, "int:%d\n", array[0]);//ÊÖ¶¯ĞŞ¸ÄÄÚ´æ£¬ Çë½«arrayÖĞµÄµÚÒ»¸öÊı×Ö´óĞ¡ĞŞ¸ÄÎª15£¬
-	DUITRACE(_T("array---[0]: %s"), chInput);//×¢ÒâÓÃ´Ë·½·¨¿ÉÒÔÊä³öĞÅÏ¢µ½vsµÄµ÷ÊÔ´°¿ÚÖĞ
+	sprintf(chInput, "int:%d\n", array[0]);//æ‰‹åŠ¨ä¿®æ”¹å†…å­˜ï¼Œ è¯·å°†arrayä¸­çš„ç¬¬ä¸€ä¸ªæ•°å­—å¤§å°ä¿®æ”¹ä¸º15ï¼Œ
+	DUITRACE(_T("array---[0]: %s"), chInput);//æ³¨æ„ç”¨æ­¤æ–¹æ³•å¯ä»¥è¾“å‡ºä¿¡æ¯åˆ°vsçš„è°ƒè¯•çª—å£ä¸­
 
 	//OutputDebugString(chInput);
 
@@ -92,17 +95,17 @@ DWORD WINAPI ListMainForm::Search(LPVOID lpParameter)
 
 	try
 	{
-		struct Prama* prama = (struct Prama *)lpParameter;//Ö¸ÕëÀàĞÍ×ª»»£¬´Óvoid* ×ª»»ÎªÄ¿±êÖ¸ÕëÀàĞÍ
+		struct Prama* prama = (struct Prama *)lpParameter;//æŒ‡é’ˆç±»å‹è½¬æ¢ï¼Œä»void* è½¬æ¢ä¸ºç›®æ ‡æŒ‡é’ˆç±»å‹
 		CListUI* pList = prama->pList;
 		CButtonUI* pSearch = prama->pSearch;
 		CDuiString tDomain = prama->tDomain;
 		//-------------------------------------
 		/*
-		* Ìí¼ÓÊı¾İÑ­»·
+		* æ·»åŠ æ•°æ®å¾ªç¯
 		*/
 		for (int i = 0; i < 100; i++)
 		{
-			std::stringstream ss;//Ê¹ÓÃstringstream·½±ã×Ö·û´®Æ´½Ó 
+			std::stringstream ss;//ä½¿ç”¨stringstreamæ–¹ä¾¿å­—ç¬¦ä¸²æ‹¼æ¥ 
 			ss << "www." << i << ".com";
 			domain.push_back(ss.str());
 			ss.clear();
@@ -115,12 +118,12 @@ DWORD WINAPI ListMainForm::Search(LPVOID lpParameter)
 				::PostMessage(prama->hWnd, WM_ADDLISTITEM, 0L, (LPARAM)pListElement);
 			}
 			/*
-			*	Sleep ÎªÁËÕ¹Ê¾Ìí¼ÓµÄ¶¯Ì¬Ğ§¹û£¬¹Ê·ÅÂıÁËÌí¼ÓËÙ¶È£¬Í¬Ê±¿ÉÒÔ¿´µ½Ìí¼Ó¹ı³ÌÖĞ½çÃæÈÔÈ»¿ÉÒÔÏìÓ¦
+			*	Sleep ä¸ºäº†å±•ç¤ºæ·»åŠ çš„åŠ¨æ€æ•ˆæœï¼Œæ•…æ”¾æ…¢äº†æ·»åŠ é€Ÿåº¦ï¼ŒåŒæ—¶å¯ä»¥çœ‹åˆ°æ·»åŠ è¿‡ç¨‹ä¸­ç•Œé¢ä»ç„¶å¯ä»¥å“åº”
 			*/
 			::Sleep(100);
 		}
-		
-		delete prama;//Ò»¶¨ÒªÉ¾³ıÕâ¸ö±äÁ¿£¬·ñÔò»áÔì³ÉÄÚ´æĞ¹Â©£¬new PramaºÍdeleteÒª³É¶Ô³öÏÖ
+
+		delete prama;//ä¸€å®šè¦åˆ é™¤è¿™ä¸ªå˜é‡ï¼Œå¦åˆ™ä¼šé€ æˆå†…å­˜æ³„æ¼ï¼Œnew Pramaå’Œdeleteè¦æˆå¯¹å‡ºç°
 
 
 		pSearch->SetEnabled(true);
@@ -136,7 +139,7 @@ DWORD WINAPI ListMainForm::Search(LPVOID lpParameter)
 
 void ListMainForm::Login()
 {
-	::MessageBox(NULL, "µÇÂ¼³É¹¦", _T("ÌáÊ¾"), MB_OK);
+	::MessageBox(NULL, "ç™»å½•æˆåŠŸ", _T("æç¤º"), MB_OK);
 	SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	WinExec("D:\\c++Study\\duilib_new\\duilib_teach\\bin\\QQDemo.exe", SW_SHOW);
 }
@@ -170,7 +173,7 @@ void ListMainForm::ChangeImg()
 	if (!access(path_temp, 0))
 	{
 		m_pChangeimg->SetNormalImage(path_temp);
-		m_pEdit->SetText(_T("    ¹§Ï²Äã£¡Í·Ïñ¸ü»»³É¹¦"));
+		m_pEdit->SetText(_T("    æ­å–œä½ ï¼å¤´åƒæ›´æ¢æˆåŠŸ"));
 	}
 	else
 		path_image = GetImgPath();
@@ -178,35 +181,222 @@ void ListMainForm::ChangeImg()
 	if (path_image != 0)
 	{
 		m_pChangeimg->SetNormalImage(_T(path_image));
-		m_pEdit->SetText(_T("µØÖ·:") + _bstr_t(path_image));
+		m_pEdit->SetText(_T("åœ°å€:") + _bstr_t(path_image));
 	}
-	else if(path_image == 0 && access(path_temp, 0) == -1)
-		m_pEdit->SetText(_T("    ÇëÑ¡ÔñÕıÈ·µÄÍ¼Æ¬Â·¾¶Å¶"));
+	else if (path_image == 0 && access(path_temp, 0) == -1)
+		m_pEdit->SetText(_T("    è¯·é€‰æ‹©æ­£ç¡®çš„å›¾ç‰‡è·¯å¾„å“¦"));
 }
 
-void GetUrlReturn() {
+
+//æ ¹æ®urlä¸‹è½½äºŒç»´ç å¹¶é‡å‘½ååˆ°æŒ‡å®šæ–‡ä»¶å¤¹ä¸­
+FILE *fp;//å®šä¹‰FILEç±»å‹æŒ‡é’ˆ
+//è¿™ä¸ªå‡½æ•°æ˜¯ä¸ºäº†ç¬¦åˆCURLOPT_WRITEFUNCTIONè€Œæ„é€ çš„
+//å®Œæˆæ•°æ®ä¿å­˜åŠŸèƒ½
+size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+	int written = 0;
+	written = fwrite(ptr, size, nmemb, stream);
+	return written;
+}
+
+int ListMainForm::DownloadQRC(char *msg)
+{
+	int ret;
+	CURL *curl;
+	CURLcode res;
+	FILE *file = NULL;
+	char HttpBuf[200];
+	char *qrload = msg;
+
+	std::stringstream filename;
+	//ç”¨éšæœºæ•°å‘½åäºŒç»´ç æ–‡ä»¶ï¼Œè§£å†³æ›´æ¢è´¦å·æ— æ³•è‡ªåŠ¨æ›´æ¢äºŒç»´ç çš„é—®é¢˜
+	filename << "..\\bin\\skin\\WeChatRes\\" << to_string(rand()%1000) << ".jpg";
+
+	file = fopen(filename.str().c_str(), "wb");
+	curl = curl_easy_init();
+	curl_easy_setopt(curl, CURLOPT_URL, qrload);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)file);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteData);
+	res = curl_easy_perform(curl);
+	if ((res != CURLE_OK) && (res != CURLE_WRITE_ERROR)) {
+		m_pEdit->SetText(_T("        äºŒç»´ç æ›´æ–°å¤±è´¥"));
+		return -1;
+	}
+	curl_easy_cleanup(curl);
+	fclose(file);
+	
+	m_pQRcode->SetBkImage(filename.str().c_str());
+	remove(filename.str().c_str());		//åˆ é™¤äºŒç»´ç æ–‡ä»¶
+
+	return 0;
+}
+
+static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
+{
+	((std::string*)userp)->append((char*)contents, size * nmemb);
+	return size * nmemb;
+}
+
+string ListMainForm::GetLoginUrlData()
+{
 	CURL *curl;
 	CURLcode res;
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
-	if (curl) {
-		res = curl_easy_setopt(curl, CURLOPT_URL, "http://localhost:8081/login?username=ljm&pwd=111111");
-		//res = curl_easy_setopt(curl, CURLOPT_URL, "http://www.baidu.com");
-		//curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "username=ljm&pwd=111111");
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK)
-			::MessageBox(NULL, _T("³É¹¦"), _T("ÌáÊ¾"), MB_OK);
-			//fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
-		curl_easy_cleanup(curl);
+	string readBuffer;
+	CDuiString password = m_pPwd->GetText();
+	CDuiString username = m_pUserName->GetText();
+	CDuiString host = "http://localhost:8081/autologin?";
+	stringstream url;
+	url << host << "username="<< username << "&pwd=" << password;
+	string temp = url.str();
+	char* p_url = const_cast<char*>(temp.c_str());
+
+	if (!(username[0] && password[0]))
+	{
+		m_pEdit->SetText(_T("        è´¦å·æˆ–å¯†ç ä¸ºç©º"));
+		ShockWnd();
+		return "0";
 	}
+	if (curl)
+	{
+		res = curl_easy_setopt(curl, CURLOPT_URL, p_url);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+		//LPVOID  p = &readBuffer;
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		res = curl_easy_perform(curl);
+		if (res == CURLE_OK)
+		{
+			if (GetAccountInfo(readBuffer, "code") == "1")
+			{
+				/*long responseCode = 0;
+				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);*/
+				curl_easy_cleanup(curl);
+				return readBuffer;
+			}
+			else
+			{
+				m_pEdit->SetText(_T("        è´¦å·æˆ–å¯†ç é”™è¯¯"));
+				ShockWnd();
+				return "0";
+			}
+		}
+	}
+	m_pEdit->SetText(_T("   ç½‘ç»œè¿æ¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œ"));
+	ShockWnd();
 	curl_global_cleanup();
+	return "0";
+}
+
+//UTF-8è½¬Unicode
+string U8ToUnicode(string szU8)
+{
+	//UTF8 to Unicode
+	//é¢„è½¬æ¢ï¼Œå¾—åˆ°æ‰€éœ€ç©ºé—´çš„å¤§å°
+	LPCCH szU8_str = szU8.c_str();
+	int wcsLen = ::MultiByteToWideChar(CP_UTF8, NULL, szU8_str, strlen(szU8_str), NULL, 0);
+	//åˆ†é…ç©ºé—´è¦ç»™'\0'ç•™ä¸ªç©ºé—´ï¼ŒMultiByteToWideCharä¸ä¼šç»™'\0'ç©ºé—´
+	wchar_t* wszString = new wchar_t[wcsLen + 1];
+	//è½¬æ¢
+	::MultiByteToWideChar(CP_UTF8, NULL, szU8_str, strlen(szU8_str), wszString, wcsLen);
+	//æœ€ååŠ ä¸Š'\0'
+	wszString[wcsLen] = '\0';
+
+	char *m_char;
+	int len = WideCharToMultiByte(CP_ACP, 0, wszString, wcslen(wszString), NULL, 0, NULL, NULL);
+	m_char = new char[len + 1];
+	WideCharToMultiByte(CP_ACP, 0, wszString, wcslen(wszString), m_char, len, NULL, NULL);
+	m_char[len] = '\0';
+	return m_char;
+}
+
+
+string ListMainForm::GetAccountInfo(string msg, string virtue)
+{
+	int len;
+	int virtue_len = virtue.length() - 1;
+	string msg_virtue;
+	size_t msg_pos_start = 0;
+	size_t msg_pos_end = 0;
+	msg_pos_start = msg.find(virtue, msg_pos_start);	//å…³é”®å­—ç¬¬ä¸€ä¸ªå­—ç¬¦çš„ä½ç½®
+	int temp_pos = msg_pos_start;
+	msg_pos_end = msg.find(",\"", temp_pos);
+
+	if (msg_pos_end > msg.length())
+		msg_pos_end = msg.find("}", temp_pos);		//åˆ¤æ–­æ˜¯å¦ç»“å°¾
+
+	temp_pos += virtue_len + 3;
+	
+	if (msg.substr(temp_pos, 1) != "\"")		//åˆ¤æ–­æœ‰æ— åŒå¼•å·
+	{
+		len = msg_pos_end - temp_pos;
+		msg_virtue = msg.substr(temp_pos, len);
+	}
+	else
+	{
+		len = msg_pos_end - temp_pos - 2;
+		msg_virtue = msg.substr(temp_pos + 1, len);
+	}
+	//::MessageBox(NULL, msg_virtue.c_str(), virtue.c_str(), MB_OK);
+	return msg_virtue;
+}
+
+//OnLogin 
+
+void ListMainForm::OnLogin()
+{
+	string serverMsg = U8ToUnicode(GetLoginUrlData());//å°å†™å¼€å¤´
+	if (serverMsg == "0")
+		return;
+	//string code = GetAccountInfo(serverMsg, "code");
+	string uid = GetAccountInfo(serverMsg, "uid");
+	string username = GetAccountInfo(serverMsg, "username");
+	string account = GetAccountInfo(serverMsg, "account");
+	string status = GetAccountInfo(serverMsg, "status");
+	string errorNum = GetAccountInfo(serverMsg, "errorNum");
+	string siteurl = GetAccountInfo(serverMsg, "siteurl");
+	string userType = GetAccountInfo(serverMsg, "userType");
+	string stype = GetAccountInfo(serverMsg, "stype");
+	string categoryId = GetAccountInfo(serverMsg, "categoryId");
+	string categoryName = GetAccountInfo(serverMsg, "categoryName");
+	string ledgeName = GetAccountInfo(serverMsg, "ledgeName");
+	string schoolname = GetAccountInfo(serverMsg, "schoolname");
+	string bankid = GetAccountInfo(serverMsg, "bankid");
+	string bankname = GetAccountInfo(serverMsg, "bankname");
+
+	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("ç™»å½•æˆåŠŸ"));
+	std::stringstream QRCurl;
+	QRCurl << "http://api.k780.com:88/?app=qr.get&data=è´¦å·åŸºæœ¬ä¿¡æ¯:%0Aå§“å:" << username << "%0Aè´¦å·:" << account << "%0Aæ•™å­¦ç§‘ç›®:" << bankname << "%0Aåˆ†ç±»åç§°:" << categoryName << "%0Aæ•™å­¦ä¹¦ç›®:" << ledgeName << "%0Aå­¦æ ¡:" << schoolname;
+	string temp = QRCurl.str();
+	char* p_url = const_cast<char*>(temp.c_str());
+	DownloadQRC(p_url);
 }
 
 
 
+void ListMainForm::ShockWnd()
+{
+	RECT rcWnd;
+	::GetWindowRect(*this, &rcWnd);
+	LONG left = rcWnd.left;
+	LONG top = rcWnd.top;
+	LONG width = rcWnd.right - rcWnd.left;
+	LONG height = rcWnd.bottom - rcWnd.top;
+	for (int i = 0; i < 10; i++)
+	{
+		SetWindowPos(m_hWnd, NULL, left - 7, top, width, height, SWP_SHOWWINDOW);
+		::Sleep(10);
+		SetWindowPos(m_hWnd, NULL, left + 7, top, width, height, SWP_SHOWWINDOW);
+		::Sleep(10);
+		SetWindowPos(m_hWnd, NULL, left, rcWnd.top, width, height, SWP_SHOWWINDOW);
+		::Sleep(10);
+	}
+}
+
+
 
 /***
-*TODO ±àĞ´º¯ÊıÔÚµã»÷search°´Å¥Ö®ºóµ±Ç°´°¿ÚÎ§ÈÆ×óÉÏ½ÇĞı×ª£¬Ğı×ª°ë¾¶Îª50£¬¿¼ÂÇ¶àÏß³Ì£¬¶¨Ê±Æ÷
+*TODO ç¼–å†™å‡½æ•°åœ¨ç‚¹å‡»searchæŒ‰é’®ä¹‹åå½“å‰çª—å£å›´ç»•å·¦ä¸Šè§’æ—‹è½¬ï¼Œæ—‹è½¬åŠå¾„ä¸º50ï¼Œè€ƒè™‘å¤šçº¿ç¨‹ï¼Œå®šæ—¶å™¨
 
 */
 
@@ -215,11 +405,11 @@ void ListMainForm::OnSearch()
 
 	struct Prama *prama = new Prama;
 
-	CListUI* pList = static_cast<CListUI*>(m_pm.FindControl(_T("domainlist"))); //ÌáÎÊ£º ´Ë´¦¿ÉÒÔÈçºÎÓÅ»¯£¿
+	CListUI* pList = static_cast<CListUI*>(m_pm.FindControl(_T("domainlist"))); //æé—®ï¼š æ­¤å¤„å¯ä»¥å¦‚ä½•ä¼˜åŒ–ï¼Ÿ
 	CEditUI* pEdit = static_cast<CEditUI*>(m_pm.FindControl(_T("input")));
 	pEdit->SetEnabled(false);
 	CDuiString input = pEdit->GetText();
-	m_pSearch->SetEnabled(false);//ÌáÎÊ£º´Ë´¦ÎªºÎÒªSetEnabled(false);£¿
+	m_pSearch->SetEnabled(false);//æé—®ï¼šæ­¤å¤„ä¸ºä½•è¦SetEnabled(false);ï¼Ÿ
 	pList->RemoveAll();
 	domain.empty();
 	domain.resize(0);
@@ -228,17 +418,17 @@ void ListMainForm::OnSearch()
 	DWORD dwThreadID = 0;
 	pList->SetTextCallback(this);//[1]
 
-	prama->hWnd = GetHWND();//¸ø½á¹¹Ìå¸³Öµ£¬ÓÃ½á¹¹Ìå´«µİ²ÎÊıµÄºÃ´¦ÊÇ£ºµ±ÒªÔö¼Ó»òÕßÉ¾³ıÒ»¸ö²ÎÊıµÄÊ±ºò¿ÉÒÔÖ±½ÓĞŞ¸Ä½á¹¹Ìå
+	prama->hWnd = GetHWND();//ç»™ç»“æ„ä½“èµ‹å€¼ï¼Œç”¨ç»“æ„ä½“ä¼ é€’å‚æ•°çš„å¥½å¤„æ˜¯ï¼šå½“è¦å¢åŠ æˆ–è€…åˆ é™¤ä¸€ä¸ªå‚æ•°çš„æ—¶å€™å¯ä»¥ç›´æ¥ä¿®æ”¹ç»“æ„ä½“
 	prama->pList = pList;
 	prama->pSearch = m_pSearch;
 	prama->tDomain = input;
 
-	//¿ªÆôÏß³Ì½øÈëÏß³ÌÖ´ĞĞº¯Êı£¬search,
+	//å¼€å¯çº¿ç¨‹è¿›å…¥çº¿ç¨‹æ‰§è¡Œå‡½æ•°ï¼Œsearch,
 	HANDLE hThread = CreateThread(NULL, 0, &ListMainForm::Search, (LPVOID)prama, 0, &dwThreadID);
 }
 
 /*
-* ¹Ø¼üµÄ»Øµ÷º¯Êı£¬IListCallbackUI ÖĞµÄÒ»¸öĞéº¯Êı£¬äÖÈ¾Ê±ºò»áµ÷ÓÃ,ÔÚ[1]ÖĞÉèÖÃÁË»Øµ÷¶ÔÏó
+* å…³é”®çš„å›è°ƒå‡½æ•°ï¼ŒIListCallbackUI ä¸­çš„ä¸€ä¸ªè™šå‡½æ•°ï¼Œæ¸²æŸ“æ—¶å€™ä¼šè°ƒç”¨,åœ¨[1]ä¸­è®¾ç½®äº†å›è°ƒå¯¹è±¡
 */
 LPCTSTR  ListMainForm::GetItemText(CControlUI* pControl, int iIndex, int iSubItem)
 {
@@ -281,10 +471,46 @@ LPCTSTR  ListMainForm::GetItemText(CControlUI* pControl, int iIndex, int iSubIte
 	return pControl->GetUserData();
 }
 
+void ListMainForm::ClickBack()
+{
+	if (m_pLoginpage) m_pLoginpage->SetVisible(true);
+	if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+	if (m_pReturn) m_pReturn->SetVisible(false);
+	if (m_pSetting) m_pSetting->SetVisible(true);
+
+	if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+	m_pQRcode->SetBkImage("datedu.png");
+}
+
+void ListMainForm::ClickSetting()
+{
+	if (m_pLoginpage) m_pLoginpage->SetVisible(false);
+	if (m_pSkinlayout) m_pSkinlayout->SetVisible(true);
+	if (m_pReturn) m_pReturn->SetVisible(true);
+	if (m_pSetting) m_pSetting->SetVisible(false);
+
+	if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+}
+
+void ListMainForm::ClickQRCioc()
+{
+	if (m_pQRcodepage) m_pQRcodepage->SetVisible(true);
+	if (m_pLoginpage) m_pLoginpage->SetVisible(false);
+
+	if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+	if (m_pReturn) m_pReturn->SetVisible(true);
+	if (m_pSetting) m_pSetting->SetVisible(false);
+}
+
+
+void ListMainForm::ColorTag()
+{
+
+}
 
 /**
-* DUI¿ò¼ÜÄÚ²¿¶¨ÒåµÄÏûÏ¢»Øµ÷º¯Êı£¬ÏûÏ¢ÌåTNotifyUI°üÀ¨Ò»¸öÏûÏ¢ºÜ×ÔÈ»µÄÒ»Ğ©ÊôĞÔÈçÏûÏ¢µÄÀàĞÍ£¬
-ÏûÏ¢µÄ·¢ËÍÕß£¬ÏûÏ¢·¢ÉúµÄÊ±¼ä£¬ÏûÏ¢·¢ÉúÊ±ºòÊó±êµÄÎ»ÖÃµÈµÈ£¬ ¿ÉÒÔÔÚ´Ë´¦´òÉÏ¶Ïµã£¬²é¿´duiÏûÏ¢Á÷×ªË³Ğò
+* DUIæ¡†æ¶å†…éƒ¨å®šä¹‰çš„æ¶ˆæ¯å›è°ƒå‡½æ•°ï¼Œæ¶ˆæ¯ä½“TNotifyUIåŒ…æ‹¬ä¸€ä¸ªæ¶ˆæ¯å¾ˆè‡ªç„¶çš„ä¸€äº›å±æ€§å¦‚æ¶ˆæ¯çš„ç±»å‹ï¼Œ
+æ¶ˆæ¯çš„å‘é€è€…ï¼Œæ¶ˆæ¯å‘ç”Ÿçš„æ—¶é—´ï¼Œæ¶ˆæ¯å‘ç”Ÿæ—¶å€™é¼ æ ‡çš„ä½ç½®ç­‰ç­‰ï¼Œ å¯ä»¥åœ¨æ­¤å¤„æ‰“ä¸Šæ–­ç‚¹ï¼ŒæŸ¥çœ‹duiæ¶ˆæ¯æµè½¬é¡ºåº
 */
 void  ListMainForm::Notify(TNotifyUI& msg)
 {
@@ -318,48 +544,32 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			ChangeImg();
 		}
+		//å·¦ä¸Šè§’logo
 		else if (msg.pSender == m_pLogo)
 		{
 			ShellExecute(NULL, _T("open"), _T("http://www.datedu.cn/"), NULL, NULL, SW_SHOW);
 		}
 		else if (msg.pSender == m_pLogin)
 		{
-			GetUrlReturn();
-			/*if (m_pQRcodepage) m_pQRcodepage->SetVisible(true);
-			if (m_pLoginpage) m_pLoginpage->SetVisible(false);
-
-			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);*/
+			OnLogin();
 		}
-		else if (msg.pSender == m_pQRcode)
+		//ä¸»é¡µé¢äºŒç»´ç å›¾æ ‡æŒ‰é’®
+		else if (msg.pSender == m_pQRC_ioc)
 		{
-			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
-			if (m_pLoginpage) m_pLoginpage->SetVisible(true);
-
-			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
+			ClickQRCioc();
 		}
+		//å³ä¸Šè§’è®¾ç½®æŒ‰é’®
 		else if (msg.pSender == m_pSetting)
 		{
-			if (m_pLoginpage) m_pLoginpage->SetVisible(false);
-			if (m_pSkinlayout) m_pSkinlayout->SetVisible(true);
-			if (m_pReturn) m_pReturn->SetVisible(true);
-			if (m_pSetting) m_pSetting->SetVisible(false);
-
-			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+			ClickSetting();
 		}
 		else if (msg.pSender == m_pReturn)
 		{
-			if (m_pLoginpage) m_pLoginpage->SetVisible(true);
-			if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
-			if (m_pReturn) m_pReturn->SetVisible(false);
-			if (m_pSetting) m_pSetting->SetVisible(true);
-
-			if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+			ClickBack();
 		}
 		else if (msg.pSender == m_pbkc_default)
 		{
 			Changebk(m_pbkc_default->GetBkColor());
-			//m_pMainbk->SetBkColor(m_pbkc_default->GetBkColor());
-			/*m_pMainbk->SetBkImage(_T("Í¸Ã÷.png"));*/
 		}
 		else if (msg.pSender == m_pbkc_lightblue)
 		{
@@ -377,8 +587,8 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			LPTSTR path_image;
 			path_image = GetImgPath();
-			if(path_image)
-			m_pMainbk->SetBkImage(_T(path_image));
+			if (GetImgPath())
+				m_pMainbk->SetBkImage(_T(path_image));
 		}
 	}
 	else if (msg.sType == _T("setfocus"))
@@ -391,7 +601,7 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 	{
 		int iIndex = msg.pSender->GetTag();
 		CDuiString sMessage = _T("Click: ");;
-#ifdef _UNICODE		  //Ë¼¿¼´Ë´¦ºê¶¨ÒåµÄÄ¿µÄÊÇÊ²Ã´£¬
+#ifdef _UNICODE		  //æ€è€ƒæ­¤å¤„å®å®šä¹‰çš„ç›®çš„æ˜¯ä»€ä¹ˆï¼Œ
 		int iLen = domain[iIndex].length();
 		LPWSTR lpText = new WCHAR[iLen + 1];
 		::ZeroMemory(lpText, (iLen + 1) * sizeof(WCHAR));
@@ -399,10 +609,10 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		sMessage += lpText;
 		delete[] lpText;
 #else
-		sMessage += domain[iIndex].c_str();//´Ë´¦²ÎÏêc++ÔËËã·ûÖØÔØ£¬´úÂë	CDuiString CDuiString::operator+(LPCTSTR lpStr) const
+		sMessage += domain[iIndex].c_str();//æ­¤å¤„å‚è¯¦c++è¿ç®—ç¬¦é‡è½½ï¼Œä»£ç 	CDuiString CDuiString::operator+(LPCTSTR lpStr) const
 
 #endif
-		::MessageBox(NULL, sMessage.GetData(), _T("ÌáÊ¾(by tojen)"), MB_OK);
+		::MessageBox(NULL, sMessage.GetData(), _T("æç¤º(by tojen)"), MB_OK);
 	}
 
 	else if (msg.sType == _T("showactivex")) {
@@ -412,7 +622,7 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		pActiveX->GetControl(IID_IUnknown, (void**)&pFlash);
 		if (pFlash != NULL) {
 			pFlash->put_WMode(_bstr_t(_T("Transparent")));
-			pFlash->put_Movie(_bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\WeChatRes\\¶şÎ¬Âë.swf")));
+			pFlash->put_Movie(_bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\WeChatRes\\äºŒç»´ç .swf")));
 			pFlash->DisableLocalSecurity();
 			pFlash->put_AllowScriptAccess(L"always");
 			BSTR response;
@@ -427,15 +637,15 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		CMenuWnd* pMenu = new CMenuWnd();
 		if (pMenu == NULL) { return; }
 		POINT pt = { msg.ptMouse.x, msg.ptMouse.y };
-		::ClientToScreen(*this, &pt);//µ±Ç°´°¿Ú×ø±ê×ª»»ÎªÏµÍ³×ø±ê£¬Ïàµ±ÓÚ¾Ö²¿×ø±êÏµ×ª»»Îª¾ø¶Ô×ø±êÏµ¡£
+		::ClientToScreen(*this, &pt);//å½“å‰çª—å£åæ ‡è½¬æ¢ä¸ºç³»ç»Ÿåæ ‡ï¼Œç›¸å½“äºå±€éƒ¨åæ ‡ç³»è½¬æ¢ä¸ºç»å¯¹åæ ‡ç³»ã€‚
 		pMenu->Init(msg.pSender, pt);
 	}
 	else if (msg.sType == _T("menu_Delete")) {
 		CListUI* pList = static_cast<CListUI*>(msg.pSender);
-		int nSel = pList->GetCurSel();//duiÌá¹©µÄ¿ì½İ·½·¨£¬
+		int nSel = pList->GetCurSel();//duiæä¾›çš„å¿«æ·æ–¹æ³•ï¼Œ
 		if (nSel < 0) return;
 		pList->RemoveAt(nSel);
-		domain.erase(domain.begin() + nSel);//ÇëË¼¿¼´Ë´¦ÎªºÎÒªÉ¾³ıdomainÄÚÊı¾İ
+		domain.erase(domain.begin() + nSel);//è¯·æ€è€ƒæ­¤å¤„ä¸ºä½•è¦åˆ é™¤domainå†…æ•°æ®
 		desc.erase(desc.begin() + nSel);
 	}
 }
@@ -449,7 +659,7 @@ LRESULT  ListMainForm::OnAddListItem(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 }
 
 /***
-*ÒÔÏÂ²¿·Ö´úÂëÀ´×ÔWindowImplBase::OnCreate£¬ ¿ÉÒÔÁË½â×îÔ­Ê¼µÄ´°¿Ú½¨Á¢¹ı³Ì
+*ä»¥ä¸‹éƒ¨åˆ†ä»£ç æ¥è‡ªWindowImplBase::OnCreateï¼Œ å¯ä»¥äº†è§£æœ€åŸå§‹çš„çª—å£å»ºç«‹è¿‡ç¨‹
 */
 LRESULT  ListMainForm::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -457,7 +667,7 @@ LRESULT  ListMainForm::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 	styleValue &= ~WS_CAPTION;
 	::SetWindowLong(*this, GWL_STYLE, styleValue | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
 
-	
+
 
 	CDialogBuilder builder;
 	CDuiString strResourcePath = m_pm.GetResourcePath();
@@ -484,13 +694,13 @@ LRESULT  ListMainForm::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 
 
 /***
-¿ÉÒÔÊ¹ÓÃÄÚ´æÕï¶Ï¹¤¾ß£¨µ÷ÊÔ£¬´°¿Ú£¬ÏÔÊ¾Õï¶Ï¹¤¾ß£©ÇåÎúµÄ¿´µ½ÄÚ´æÖ»Ôö²»¼õµÄÇéĞÎ
+å¯ä»¥ä½¿ç”¨å†…å­˜è¯Šæ–­å·¥å…·ï¼ˆè°ƒè¯•ï¼Œçª—å£ï¼Œæ˜¾ç¤ºè¯Šæ–­å·¥å…·ï¼‰æ¸…æ™°çš„çœ‹åˆ°å†…å­˜åªå¢ä¸å‡çš„æƒ…å½¢
 */
-void ListMainForm::onTimerTest() 
+void ListMainForm::onTimerTest()
 {
-	void * ptr = malloc(1024*1024);
+	void * ptr = malloc(1024 * 1024);
 
-	Sleep(10);//×¢ÊÍÒÔÏÂÈı¾ä
+	Sleep(10);//æ³¨é‡Šä»¥ä¸‹ä¸‰å¥
 	if (ptr)
 		free(ptr);
 }
@@ -549,7 +759,7 @@ LRESULT  ListMainForm::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 }
 
 /**
-*´óĞ¡¸Ä±äµÄ»Øµ÷º¯Êı£¬¿ÉÒÔ³¢ÊÔ×¢ÊÍ£¬ĞŞ¸Ä´úÂë ¿´Ğ§¹û
+*å¤§å°æ”¹å˜çš„å›è°ƒå‡½æ•°ï¼Œå¯ä»¥å°è¯•æ³¨é‡Šï¼Œä¿®æ”¹ä»£ç  çœ‹æ•ˆæœ
 */
 LRESULT  ListMainForm::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -592,7 +802,7 @@ LRESULT  ListMainForm::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 
 LRESULT  ListMainForm::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	// ÓĞÊ±»áÔÚÊÕµ½WM_NCDESTROYºóÊÕµ½wParamÎªSC_CLOSEµÄWM_SYSCOMMAND
+	// æœ‰æ—¶ä¼šåœ¨æ”¶åˆ°WM_NCDESTROYåæ”¶åˆ°wParamä¸ºSC_CLOSEçš„WM_SYSCOMMAND
 	if (wParam == SC_CLOSE) {
 		::PostQuitMessage(0L);
 		bHandled = TRUE;
@@ -614,7 +824,7 @@ LRESULT  ListMainForm::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 }
 
 /***
-* ´¦ÀíÀ´×ÅwindowsÏµÍ³µÄ¸÷ÖÖÏûÏ¢£¬WM= windows  message
+* å¤„ç†æ¥ç€windowsç³»ç»Ÿçš„å„ç§æ¶ˆæ¯ï¼ŒWM= windows  message
 */
 LRESULT  ListMainForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -646,9 +856,9 @@ LRESULT  ListMainForm::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 /****
-ÌáÎÊ£º
-1.ÇëÍ³¼ÆÏÂÖ´ĞĞsearchÇ°ºólistdemo.exeµÄÄÚ´æÔö³¤Çé¿ö£¨£©28
-2.Çë×Ô¼ºÌí¼ÓÒ»¸öÄÚ´æĞ¹Â©µÄ´úÂë£¬ÔÚÖ´ĞĞserarchÖ®ºóÄÚ´æÕ¼ÓÃ³¬¹ı1M£¬
+æé—®ï¼š
+1.è¯·ç»Ÿè®¡ä¸‹æ‰§è¡Œsearchå‰ålistdemo.exeçš„å†…å­˜å¢é•¿æƒ…å†µï¼ˆï¼‰28
+2.è¯·è‡ªå·±æ·»åŠ ä¸€ä¸ªå†…å­˜æ³„æ¼çš„ä»£ç ï¼Œåœ¨æ‰§è¡Œserarchä¹‹åå†…å­˜å ç”¨è¶…è¿‡1Mï¼Œ
 
 
 */
