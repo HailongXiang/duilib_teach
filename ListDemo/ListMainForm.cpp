@@ -14,7 +14,7 @@ using namespace DuiLib;
 
 #define TIMER_ID_TEST 100
 #define TIMER_TIME_TEST 1000
-
+#define MSG_NULL "0"
 /*
 * 存放第二列数据
 */
@@ -188,18 +188,20 @@ void ListMainForm::ChangeImg()
 }
 
 
-//根据url下载二维码并重命名到指定文件夹中
-FILE *fp;//定义FILE类型指针
-//这个函数是为了符合CURLOPT_WRITEFUNCTION而构造的
+void PostRes(char* url, string  )
+{
+
+}
+
 //完成数据保存功能
 size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	int written = 0;
-	written = fwrite(ptr, size, nmemb, stream);
-	return written;
+	written = fwrite(ptr, size, nmemb, stream);	//向二进制文件写入一个数据块，ptr 获取数据的地址，stream 目标文件指针
+	return written;		//返回写入的字符数
 }
 
-//根据url下载二维码图片
+//根据url下载二维码并重命名到指定文件夹中
 int ListMainForm::DownloadQRC(char *msg)
 {
 	CURL *curl;
@@ -233,7 +235,7 @@ int ListMainForm::DownloadQRC(char *msg)
 
 static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 {
-	((std::string*)userp)->append((char*)contents, size * nmemb);
+	((std::string*)userp)->append((char*)contents, size * nmemb);	
 	return size * nmemb;
 }
 
@@ -257,14 +259,13 @@ string ListMainForm::GetLoginUrlData()
 	{
 		m_pEdit->SetText(_T("        账号或密码为空"));
 		ShockWnd();
-		return "0";
+		return MSG_NULL;
 	}
 	if (curl)
 	{
 		res = curl_easy_setopt(curl, CURLOPT_URL, p_url);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
-		//LPVOID  p = &readBuffer;
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
 		res = curl_easy_perform(curl);
 		if (res == CURLE_OK)
 		{
@@ -277,14 +278,14 @@ string ListMainForm::GetLoginUrlData()
 			{
 				m_pEdit->SetText(_T("        账号或密码错误"));
 				ShockWnd();
-				return "0";
+				return MSG_NULL;
 			}
 		}
 	}
 	m_pEdit->SetText(_T("   网络连接失败，请检查网络"));
 	ShockWnd();
 	curl_global_cleanup();
-	return "0";
+	return MSG_NULL;
 }
 
 //UTF-8转Unicode
@@ -336,6 +337,7 @@ string ListMainForm::CutKeyValue(string msg)
 	int count = 0;
 	string temp;
 	for (int i = 0; i < msg_len; i++)
+	{
 		if (msg[i] == '"' || msg[i] == '{' || msg[i] == '}')
 		{
 			msg.erase(i, 1);	//去除引号和大括号
@@ -344,6 +346,7 @@ string ListMainForm::CutKeyValue(string msg)
 		}
 		else  if (msg[i] == ',' && msg[i + 1] == '"')
 			msg[i] = '\n';		//逗号换成换行
+	}
 	return msg;
 }
 
@@ -361,10 +364,9 @@ string ListMainForm::MyMap(string key)
 void ListMainForm::OnLogin()
 {
 	string my_msg = CutKeyValue(GetLoginUrlData());//变量名小写开头
-	if (my_msg == "0")
+	if (my_msg == MSG_NULL)
 		return;
-
-	::MessageBox(NULL, CutKeyValue(my_msg).c_str(), _T("账号信息"), NULL);
+	//::MessageBox(NULL, CutKeyValue(my_msg).c_str(), _T("账号信息"), NULL);
 	string uid = GetKeyValue(my_msg,"uid");
 	string username = GetKeyValue(my_msg, "username");
 	string account = GetKeyValue(my_msg, "account");
@@ -383,7 +385,7 @@ void ListMainForm::OnLogin()
 	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
 	std::stringstream QRCurl;
 	QRCurl << "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" << username << "%0A账号:" << account << "%0A教学科目:" << bankname << "%0A分类名称:" << categoryName << "%0A教学书目:" << ledgeName << "%0A学校:" << schoolname;
-	//QRCurl << "http://api.k780.com:88/?app=qr.get&data=" << CutKeyValue(my_msg).c_str();
+	//QRCurl << "http://api.k780.com:88/?app=qr.get&data=" << my_msg;
 	string temp = QRCurl.str();
 	char* p_url = const_cast<char*>(temp.c_str());
 	DownloadQRC(p_url);

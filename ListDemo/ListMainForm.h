@@ -14,7 +14,8 @@
 #include <shellapi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include<Windows.h>
+#include <Windows.h>
+#include <map>
 
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
@@ -68,7 +69,7 @@ public:
 
 	CDuiString GetSkinFile()
 	{
-		return _T("WeChat.xml");
+		return _T("Login.xml");
 	}
 
     LPCTSTR GetWindowClassName() const 
@@ -109,7 +110,13 @@ public:
 
 	string GetLoginUrlData();
 
-	string GetAccountInfo(string msg, string virtue);
+	string GetKeyValue(string msg, string key);
+
+	string CutKeyValue(string msg);
+
+	string U8ToUnicode(string szU8);
+
+	string MyMap(string virtuename);
 
 	void ClickBack();
 
@@ -117,7 +124,7 @@ public:
 
 	void ClickQRCioc();
 
-	void ColorTag();
+	CURLcode PostRes(const char* url, string* readBuffer);
 
 	void OnSearch();
 
