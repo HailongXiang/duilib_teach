@@ -144,7 +144,7 @@ void ListMainForm::Login()
 	WinExec("D:\\c++Study\\duilib_new\\duilib_teach\\bin\\QQDemo.exe", SW_SHOW);
 }
 
-
+//获取图片路径
 LPTSTR GetImgPath() {
 	OPENFILENAME ofn;
 	char szFile[1000];
@@ -165,7 +165,7 @@ LPTSTR GetImgPath() {
 	}
 }
 
-
+//改变头像并输出路径
 void ListMainForm::ChangeImg()
 {
 	LPTSTR path_image = 0;
@@ -181,7 +181,7 @@ void ListMainForm::ChangeImg()
 	if (path_image != 0)
 	{
 		m_pChangeimg->SetNormalImage(_T(path_image));
-		m_pEdit->SetText(_T("地址:") + _bstr_t(path_image));
+		m_pEdit->SetText(_T("路径:") + _bstr_t(path_image));
 	}
 	else if (path_image == 0 && access(path_temp, 0) == -1)
 		m_pEdit->SetText(_T("    请选择正确的图片路径哦"));
@@ -199,22 +199,22 @@ size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
 	return written;
 }
 
+//根据url下载二维码图片
 int ListMainForm::DownloadQRC(char *msg)
 {
-	int ret;
 	CURL *curl;
 	CURLcode res;
 	FILE *file = NULL;
-	char HttpBuf[200];
-	char *qrload = msg;
+	string qrload = msg;
 
 	std::stringstream filename;
 	//用随机数命名二维码文件，解决更换账号无法自动更换二维码的问题
-	filename << "..\\bin\\skin\\WeChatRes\\" << to_string(rand()%1000) << ".jpg";
-
+	filename << "..\\bin\\skin\\WeChatRes\\" << to_string(rand() % 1000) << ".jpg";
+	if (qrload.length() > 900)
+		qrload = qrload.substr(0, 900);
 	file = fopen(filename.str().c_str(), "wb");
 	curl = curl_easy_init();
-	curl_easy_setopt(curl, CURLOPT_URL, qrload);
+	curl_easy_setopt(curl, CURLOPT_URL, qrload.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)file);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteData);
 	res = curl_easy_perform(curl);
@@ -237,6 +237,7 @@ static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *use
 	return size * nmemb;
 }
 
+//获取post返回的信息
 string ListMainForm::GetLoginUrlData()
 {
 	CURL *curl;
@@ -261,18 +262,16 @@ string ListMainForm::GetLoginUrlData()
 	if (curl)
 	{
 		res = curl_easy_setopt(curl, CURLOPT_URL, p_url);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
 		//LPVOID  p = &readBuffer;
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		res = curl_easy_perform(curl);
 		if (res == CURLE_OK)
 		{
-			if (GetAccountInfo(readBuffer, "code") == "1")
+			if (GetKeyValue(CutKeyValue(readBuffer), "code") == "1")
 			{
-				/*long responseCode = 0;
-				curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);*/
 				curl_easy_cleanup(curl);
-				return readBuffer;
+				return U8ToUnicode(readBuffer);
 			}
 			else
 			{
@@ -289,7 +288,7 @@ string ListMainForm::GetLoginUrlData()
 }
 
 //UTF-8转Unicode
-string U8ToUnicode(string szU8)
+string ListMainForm::U8ToUnicode(string szU8)
 {
 	//UTF8 to Unicode
 	//预转换，得到所需空间的大小
@@ -310,70 +309,88 @@ string U8ToUnicode(string szU8)
 	return m_char;
 }
 
-
-string ListMainForm::GetAccountInfo(string msg, string virtue)
+//根据关键词获取键值对
+string ListMainForm::GetKeyValue(string msg,string key)
 {
-	int len;
-	int virtue_len = virtue.length() - 1;
-	string msg_virtue;
-	size_t msg_pos_start = 0;
-	size_t msg_pos_end = 0;
-	msg_pos_start = msg.find(virtue, msg_pos_start);	//关键字第一个字符的位置
-	int temp_pos = msg_pos_start;
-	msg_pos_end = msg.find(",\"", temp_pos);
+	int key_len = key.length();
+	int msg_len = msg.length();
+	int virtue_len;
+	size_t start_pos = 0;
+	size_t end_pos = 0;
+	start_pos = msg.find(key, start_pos);	//关键字第一个字符的位置
+	if (start_pos > msg_len)
+		return "信息不存在";
+	end_pos = msg.find("\n", start_pos);
 
-	if (msg_pos_end > msg.length())
-		msg_pos_end = msg.find("}", temp_pos);		//判断是否结尾
-
-	temp_pos += virtue_len + 3;
-	
-	if (msg.substr(temp_pos, 1) != "\"")		//判断有无双引号
-	{
-		len = msg_pos_end - temp_pos;
-		msg_virtue = msg.substr(temp_pos, len);
-	}
-	else
-	{
-		len = msg_pos_end - temp_pos - 2;
-		msg_virtue = msg.substr(temp_pos + 1, len);
-	}
-	//::MessageBox(NULL, msg_virtue.c_str(), virtue.c_str(), MB_OK);
-	return msg_virtue;
+	if (end_pos > msg_len)
+		virtue_len = msg_len - start_pos - key_len;
+	virtue_len = end_pos - start_pos - key_len - 1;
+	string virtue = msg.substr(start_pos + key_len + 1, virtue_len);
+	return virtue;
 }
 
-//OnLogin 
+//把每个键值对换行分割
+string ListMainForm::CutKeyValue(string msg)
+{
+	int msg_len = msg.length();
+	int count = 0;
+	string temp;
+	for (int i = 0; i < msg_len; i++)
+		if (msg[i] == '"' || msg[i] == '{' || msg[i] == '}')
+		{
+			msg.erase(i, 1);	//去除引号和大括号
+			i--;
+			msg_len--;
+		}
+		else  if (msg[i] == ',' && msg[i + 1] == '"')
+			msg[i] = '\n';		//逗号换成换行
+	return msg;
+}
 
+string ListMainForm::MyMap(string key)
+{
+	string msg = GetLoginUrlData();
+	string virtue = GetKeyValue(msg, key);
+	map<string, string>key_virtue;
+	key_virtue.insert(pair<string, string>(key, virtue));
+	return key_virtue[key];
+}
+
+
+//OnLogin
 void ListMainForm::OnLogin()
 {
-	string serverMsg = U8ToUnicode(GetLoginUrlData());//小写开头
-	if (serverMsg == "0")
+	string my_msg = CutKeyValue(GetLoginUrlData());//变量名小写开头
+	if (my_msg == "0")
 		return;
-	//string code = GetAccountInfo(serverMsg, "code");
-	string uid = GetAccountInfo(serverMsg, "uid");
-	string username = GetAccountInfo(serverMsg, "username");
-	string account = GetAccountInfo(serverMsg, "account");
-	string status = GetAccountInfo(serverMsg, "status");
-	string errorNum = GetAccountInfo(serverMsg, "errorNum");
-	string siteurl = GetAccountInfo(serverMsg, "siteurl");
-	string userType = GetAccountInfo(serverMsg, "userType");
-	string stype = GetAccountInfo(serverMsg, "stype");
-	string categoryId = GetAccountInfo(serverMsg, "categoryId");
-	string categoryName = GetAccountInfo(serverMsg, "categoryName");
-	string ledgeName = GetAccountInfo(serverMsg, "ledgeName");
-	string schoolname = GetAccountInfo(serverMsg, "schoolname");
-	string bankid = GetAccountInfo(serverMsg, "bankid");
-	string bankname = GetAccountInfo(serverMsg, "bankname");
+
+	::MessageBox(NULL, CutKeyValue(my_msg).c_str(), _T("账号信息"), NULL);
+	string uid = GetKeyValue(my_msg,"uid");
+	string username = GetKeyValue(my_msg, "username");
+	string account = GetKeyValue(my_msg, "account");
+	string status = GetKeyValue(my_msg, "status");
+	string errorNum = GetKeyValue(my_msg, "errorNum");
+	string siteurl = GetKeyValue(my_msg, "siteurl");
+	string userType = GetKeyValue(my_msg, "userType");
+	string stype = GetKeyValue(my_msg, "stype");
+	string categoryId = GetKeyValue(my_msg, "categoryId");
+	string categoryName = GetKeyValue(my_msg, "categoryName");
+	string ledgeName = GetKeyValue(my_msg, "ledgeName");
+	string schoolname = GetKeyValue(my_msg, "schoolname");
+	string bankid = GetKeyValue(my_msg, "bankid");
+	string bankname = GetKeyValue(my_msg, "bankname");
 
 	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
 	std::stringstream QRCurl;
 	QRCurl << "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" << username << "%0A账号:" << account << "%0A教学科目:" << bankname << "%0A分类名称:" << categoryName << "%0A教学书目:" << ledgeName << "%0A学校:" << schoolname;
+	//QRCurl << "http://api.k780.com:88/?app=qr.get&data=" << CutKeyValue(my_msg).c_str();
 	string temp = QRCurl.str();
 	char* p_url = const_cast<char*>(temp.c_str());
 	DownloadQRC(p_url);
 }
 
 
-
+//窗口抖动
 void ListMainForm::ShockWnd()
 {
 	RECT rcWnd;
@@ -477,7 +494,6 @@ void ListMainForm::ClickBack()
 	if (m_pSkinlayout) m_pSkinlayout->SetVisible(false);
 	if (m_pReturn) m_pReturn->SetVisible(false);
 	if (m_pSetting) m_pSetting->SetVisible(true);
-
 	if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
 	m_pQRcode->SetBkImage("datedu.png");
 }
@@ -488,7 +504,6 @@ void ListMainForm::ClickSetting()
 	if (m_pSkinlayout) m_pSkinlayout->SetVisible(true);
 	if (m_pReturn) m_pReturn->SetVisible(true);
 	if (m_pSetting) m_pSetting->SetVisible(false);
-
 	if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
 }
 
@@ -502,11 +517,6 @@ void ListMainForm::ClickQRCioc()
 	if (m_pSetting) m_pSetting->SetVisible(false);
 }
 
-
-void ListMainForm::ColorTag()
-{
-
-}
 
 /**
 * DUI框架内部定义的消息回调函数，消息体TNotifyUI包括一个消息很自然的一些属性如消息的类型，
@@ -587,7 +597,7 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			LPTSTR path_image;
 			path_image = GetImgPath();
-			if (GetImgPath())
+			if (path_image)
 				m_pMainbk->SetBkImage(_T(path_image));
 		}
 	}
