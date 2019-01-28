@@ -109,15 +109,15 @@ public:
 
 	string GetLoginUrlData();
 
-	string GetKeyValue(string& msg, string key);
+	string GetKeyValue(const string& msg, string key);
 
-	string PostReq(string& url, string& buff);
+	string PostReq(const string& url, string& buff);
 
 	void CutKeyValue(string& msg);
 
-	string U8ToUnicode(string szU8);
+	string U8ToUnicode(const string& szU8);
 
-	string MyMap(string virtuename);
+	//string MyMap(const string& key);
 
 	void ClickBack();
 
@@ -125,9 +125,13 @@ public:
 
 	void ClickQRCioc();
 
+	void SetColorTag();
+
+	void ChangeBk(const int& msg);
+
 	void OnSearch();
 
-	void Changebk(DWORD control);
+	void Setbkc(DWORD color);
  
 	LPCTSTR GetItemText(CControlUI* pControl, int iIndex, int iSubItem);
 
@@ -204,11 +208,14 @@ private:
 	CButtonUI* m_pbkc_red;
 	CButtonUI* m_pbkc_bkiamge;
 	CButtonUI* m_pQRC_ioc;
+
     CEditUI* m_pEdit;
     CEditUI* m_pUserName;
     CEditUI* m_pPwd;
+
     CHorizontalLayoutUI* m_pLogin;
     CHorizontalLayoutUI* m_pQRcodepage;
+
     CVerticalLayoutUI* m_pSkinlayout;
     CVerticalLayoutUI* m_pLoginpage;
     CVerticalLayoutUI* m_pMainbk;

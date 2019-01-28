@@ -15,6 +15,8 @@ using namespace DuiLib;
 #define TIMER_TIME_TEST 1000
 #define MSG_NULL "0"
 
+#define K_V(name)GetKeyValue(my_msg,name);
+
 /*
 * 存放第二列数据
 */
@@ -191,7 +193,7 @@ void ListMainForm::ChangeImg()
 size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	int written = 0;
-	written = fwrite(ptr, size, nmemb, stream);	//向二进制文件写入一个数据块，ptr 获取数据的地址，stream 目标文件指针
+	written = fwrite(ptr, size, nmemb, stream);	//fwrite向二进制文件写入一个数据块，ptr 获取数据的地址，stream 目标文件指针
 	return written;		//返回写入的字符数
 }
 
@@ -229,7 +231,7 @@ static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *use
 	return size * nmemb;
 }
 
-string ListMainForm::PostReq(string& url, string& buff)
+string ListMainForm::PostReq(const string& url, string& buff)
 {
 	CURL *curl;
 	CURLcode res;
@@ -273,7 +275,7 @@ string ListMainForm::GetLoginUrlData()
 }
 
 //UTF-8转Unicode
-string ListMainForm::U8ToUnicode(string szU8)
+string ListMainForm::U8ToUnicode(const string& szU8)
 {
 	//UTF8 to Unicode
 	//预转换，得到所需空间的大小
@@ -295,7 +297,7 @@ string ListMainForm::U8ToUnicode(string szU8)
 }
 
 //根据关键词获取键值对
-string ListMainForm::GetKeyValue(string& msg,string key)
+string ListMainForm::GetKeyValue(const string& msg, string key)
 {
 	int key_len = key.length();
 	int msg_len = msg.length();
@@ -310,8 +312,8 @@ string ListMainForm::GetKeyValue(string& msg,string key)
 	if (end_pos > msg_len)
 		virtue_len = msg_len - start_pos - key_len;
 	virtue_len = end_pos - start_pos - key_len - 1;
-	string virtue = msg.substr(start_pos + key_len + 1, virtue_len);
-	return virtue;
+	string value = msg.substr(start_pos + key_len + 1, virtue_len);
+	return value;
 }
 
 //把每个键值对换行分割
@@ -333,14 +335,14 @@ void ListMainForm::CutKeyValue(string& msg)
 	}
 }
 
-string ListMainForm::MyMap(string key)
-{
-	string msg = GetLoginUrlData();
-	string virtue = GetKeyValue(msg, key);
-	map<string, string>key_virtue;
-	key_virtue.insert(pair<string, string>(key, virtue));
-	return key_virtue[key];
-}
+//string ListMainForm::MyMap(const string& key)
+//{
+//	string msg = GetLoginUrlData();
+//	string virtue = GetKeyValue(msg, key);
+//	map<string, string>key_virtue;
+//	key_virtue.insert(pair<string, string>(key, virtue));
+//	return key_virtue[key];
+//}
 
 
 //OnLogin
@@ -350,27 +352,25 @@ void ListMainForm::OnLogin()
 	if (my_msg == MSG_NULL)
 		return;
 	//::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
-	string uid = GetKeyValue(my_msg,"uid");
-	string username = GetKeyValue(my_msg, "username");
-	string account = GetKeyValue(my_msg, "account");
-	string status = GetKeyValue(my_msg, "status");
-	string errorNum = GetKeyValue(my_msg, "errorNum");
-	string siteurl = GetKeyValue(my_msg, "siteurl");
-	string userType = GetKeyValue(my_msg, "userType");
-	string stype = GetKeyValue(my_msg, "stype");
-	string categoryId = GetKeyValue(my_msg, "categoryId");
-	string categoryName = GetKeyValue(my_msg, "categoryName");
-	string ledgeName = GetKeyValue(my_msg, "ledgeName");
-	string schoolname = GetKeyValue(my_msg, "schoolname");
-	string bankid = GetKeyValue(my_msg, "bankid");
-	string bankname = GetKeyValue(my_msg, "bankname");
+	string uid = K_V("uid");
+	string username = K_V("username");
+	string account = K_V("account");
+	string status = K_V("status");
+	string errorNum = K_V("errorNum");
+	string siteurl = K_V("siteurl");
+	string userType = K_V("userType");
+	string stype = K_V("stype");
+	string categoryId = K_V("categoryId");
+	string categoryName = K_V("categoryName");
+	string ledgeName = K_V("ledgeName");
+	string schoolname = K_V("schoolname");
+	string bankid = K_V("bankid");
+	string bankname = K_V("bankname");
 
 	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
 	string QRCurl;
 	QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
 	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
-	//string temp = QRCurl.str();
-	//char* p_url = const_cast<char*>(temp.c_str());
 	DownloadQRC(QRCurl);
 }
 
@@ -490,6 +490,7 @@ void ListMainForm::ClickSetting()
 	if (m_pReturn) m_pReturn->SetVisible(true);
 	if (m_pSetting) m_pSetting->SetVisible(false);
 	if (m_pQRcodepage) m_pQRcodepage->SetVisible(false);
+	SetColorTag();
 }
 
 void ListMainForm::ClickQRCioc()
@@ -502,12 +503,43 @@ void ListMainForm::ClickQRCioc()
 	if (m_pSetting) m_pSetting->SetVisible(false);
 }
 
-void ListMainForm::Changebk(DWORD control)
+void ListMainForm::Setbkc(DWORD color)
 {
-	m_pMainbk->SetBkColor(control);
+	m_pMainbk->SetBkColor(color);
 	m_pMainbk->SetBkImage(_T("透明.png"));
 }
 
+void ListMainForm::SetColorTag()
+{
+	m_pbkc_default->SetTag(1);
+	m_pbkc_lightblue->SetTag(2);
+	m_pbkc_green->SetTag(3);
+	m_pbkc_red->SetTag(4);
+	m_pbkc_bkiamge->SetTag(5);
+}
+
+void ListMainForm::ChangeBk(const int& tag)
+{
+	switch(tag)
+	{
+	case 1:Setbkc(m_pbkc_default->GetBkColor());
+		break;
+	case 2:Setbkc(m_pbkc_lightblue->GetBkColor());
+		break;
+	case 3:Setbkc(m_pbkc_green->GetBkColor());
+		break;
+	case 4:Setbkc(m_pbkc_red->GetBkColor());
+		break;
+	case 5: 
+	{
+		LPTSTR path_image;
+		path_image = GetImgPath();
+		if (path_image)
+			m_pMainbk->SetBkImage(_T(path_image)); 
+	}
+		break;
+	}
+}
 /**
 * DUI框架内部定义的消息回调函数，消息体TNotifyUI包括一个消息很自然的一些属性如消息的类型，
 消息的发送者，消息发生的时间，消息发生时候鼠标的位置等等， 可以在此处打上断点，查看dui消息流转顺序
@@ -567,30 +599,14 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			ClickBack();
 		}
-		else if (msg.pSender == m_pbkc_default)
+		else if (msg.pSender->GetTag())
 		{
-			Changebk(m_pbkc_default->GetBkColor());
-		}
-		else if (msg.pSender == m_pbkc_lightblue)
-		{
-			Changebk(m_pbkc_lightblue->GetBkColor());
-		}
-		else if (msg.pSender == m_pbkc_green)
-		{
-			Changebk(m_pbkc_green->GetBkColor());
-		}
-		else if (msg.pSender == m_pbkc_red)
-		{
-			Changebk(m_pbkc_red->GetBkColor());
-		}
-		else if (msg.pSender == m_pbkc_bkiamge)
-		{
-			LPTSTR path_image;
-			path_image = GetImgPath();
-			if (path_image)
-				m_pMainbk->SetBkImage(_T(path_image));
+			int color_tag = msg.pSender->GetTag();
+			ChangeBk(color_tag);
 		}
 	}
+	else if (msg.sType == _T("return"))
+		OnLogin();
 	else if (msg.sType == _T("setfocus"))
 	{
 	}
