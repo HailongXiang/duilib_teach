@@ -202,35 +202,32 @@ size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
 }
 
 //根据url下载二维码并重命名到指定文件夹中
-int ListMainForm::DownloadQRC(char *msg)
+void ListMainForm::DownloadQRC(string& qrc_url)
 {
 	CURL *curl;
 	CURLcode res;
 	FILE *file = NULL;
-	string qrload = msg;
 
 	std::stringstream filename;
 	//用随机数命名二维码文件，解决更换账号无法自动更换二维码的问题
 	filename << "..\\bin\\skin\\WeChatRes\\" << to_string(rand() % 1000) << ".jpg";
-	if (qrload.length() > 900)
-		qrload = qrload.substr(0, 900);
+	if (qrc_url.length() > 900)
+		qrc_url = qrc_url.substr(0, 900);
 	file = fopen(filename.str().c_str(), "wb");
 	curl = curl_easy_init();
-	curl_easy_setopt(curl, CURLOPT_URL, qrload.c_str());
+	curl_easy_setopt(curl, CURLOPT_URL, qrc_url.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)file);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteData);
 	res = curl_easy_perform(curl);
 	if ((res != CURLE_OK) && (res != CURLE_WRITE_ERROR)) {
 		m_pEdit->SetText(_T("        二维码更新失败"));
-		return -1;
+		return;
 	}
 	curl_easy_cleanup(curl);
 	fclose(file);
 	
 	m_pQRcode->SetBkImage(filename.str().c_str());
 	remove(filename.str().c_str());		//删除二维码文件
-
-	return 0;
 }
 
 static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -267,9 +264,10 @@ string ListMainForm::GetLoginUrlData()
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
 		res = curl_easy_perform(curl);
+		CutKeyValue(readBuffer);
 		if (res == CURLE_OK)
 		{
-			if (GetKeyValue(CutKeyValue(readBuffer), "code") == "1")
+			if (GetKeyValue(readBuffer, "code") == "1")
 			{
 				curl_easy_cleanup(curl);
 				return U8ToUnicode(readBuffer);
@@ -311,7 +309,7 @@ string ListMainForm::U8ToUnicode(string szU8)
 }
 
 //根据关键词获取键值对
-string ListMainForm::GetKeyValue(string msg,string key)
+string ListMainForm::GetKeyValue(string& msg,string key)
 {
 	int key_len = key.length();
 	int msg_len = msg.length();
@@ -331,7 +329,7 @@ string ListMainForm::GetKeyValue(string msg,string key)
 }
 
 //把每个键值对换行分割
-string ListMainForm::CutKeyValue(string msg)
+void ListMainForm::CutKeyValue(string& msg)
 {
 	int msg_len = msg.length();
 	int count = 0;
@@ -347,7 +345,7 @@ string ListMainForm::CutKeyValue(string msg)
 		else  if (msg[i] == ',' && msg[i + 1] == '"')
 			msg[i] = '\n';		//逗号换成换行
 	}
-	return msg;
+	//return msg;
 }
 
 string ListMainForm::MyMap(string key)
@@ -363,7 +361,7 @@ string ListMainForm::MyMap(string key)
 //OnLogin
 void ListMainForm::OnLogin()
 {
-	string my_msg = CutKeyValue(GetLoginUrlData());//变量名小写开头
+	string my_msg = GetLoginUrlData();//变量名小写开头
 	if (my_msg == MSG_NULL)
 		return;
 	//::MessageBox(NULL, CutKeyValue(my_msg).c_str(), _T("账号信息"), NULL);
@@ -386,9 +384,9 @@ void ListMainForm::OnLogin()
 	std::stringstream QRCurl;
 	QRCurl << "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" << username << "%0A账号:" << account << "%0A教学科目:" << bankname << "%0A分类名称:" << categoryName << "%0A教学书目:" << ledgeName << "%0A学校:" << schoolname;
 	//QRCurl << "http://api.k780.com:88/?app=qr.get&data=" << my_msg;
-	string temp = QRCurl.str();
-	char* p_url = const_cast<char*>(temp.c_str());
-	DownloadQRC(p_url);
+	//string temp = QRCurl.str();
+	//char* p_url = const_cast<char*>(temp.c_str());
+	DownloadQRC(QRCurl.str());
 }
 
 
@@ -519,6 +517,11 @@ void ListMainForm::ClickQRCioc()
 	if (m_pSetting) m_pSetting->SetVisible(false);
 }
 
+void ListMainForm::Changebk(DWORD control)
+{
+	m_pMainbk->SetBkColor(control);
+	m_pMainbk->SetBkImage(_T("透明.png"));
+}
 
 /**
 * DUI框架内部定义的消息回调函数，消息体TNotifyUI包括一个消息很自然的一些属性如消息的类型，

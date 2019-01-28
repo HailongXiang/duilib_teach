@@ -60,7 +60,6 @@ class ListMainForm : public CWindowWnd, public INotifyUI, public IListCallbackUI
 public:
     ListMainForm() {
     };
-
 	CDuiString GetSkinFolder()
 	{
 
@@ -106,13 +105,13 @@ public:
 
 	void OnLogin();
 
-	int DownloadQRC(char *msg);
+	void DownloadQRC(string& msg);
 
 	string GetLoginUrlData();
 
-	string GetKeyValue(string msg, string key);
+	string GetKeyValue(string& msg, string key);
 
-	string CutKeyValue(string msg);
+	void CutKeyValue(string& msg);
 
 	string U8ToUnicode(string szU8);
 
@@ -124,15 +123,9 @@ public:
 
 	void ClickQRCioc();
 
-	CURLcode PostRes(const char* url, string* readBuffer);
-
 	void OnSearch();
 
-	void Changebk(DWORD control)
-	{
-		m_pMainbk->SetBkColor(control);
-		m_pMainbk->SetBkImage(_T("Í¸Ã÷.png"));
-	}
+	void Changebk(DWORD control);
  
 	LPCTSTR GetItemText(CControlUI* pControl, int iIndex, int iSubItem);
 
