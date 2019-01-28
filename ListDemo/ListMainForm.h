@@ -111,6 +111,8 @@ public:
 
 	string GetKeyValue(string& msg, string key);
 
+	string PostReq(string& url, string& buff);
+
 	void CutKeyValue(string& msg);
 
 	string U8ToUnicode(string szU8);

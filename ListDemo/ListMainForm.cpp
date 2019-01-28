@@ -9,12 +9,12 @@
 
 
 using namespace std;
-
 using namespace DuiLib;
 
 #define TIMER_ID_TEST 100
 #define TIMER_TIME_TEST 1000
 #define MSG_NULL "0"
+
 /*
 * 存放第二列数据
 */
@@ -187,12 +187,6 @@ void ListMainForm::ChangeImg()
 		m_pEdit->SetText(_T("    请选择正确的图片路径哦"));
 }
 
-
-void PostRes(char* url, string  )
-{
-
-}
-
 //完成数据保存功能
 size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
@@ -207,13 +201,12 @@ void ListMainForm::DownloadQRC(string& qrc_url)
 	CURL *curl;
 	CURLcode res;
 	FILE *file = NULL;
-
-	std::stringstream filename;
+	string filename;
 	//用随机数命名二维码文件，解决更换账号无法自动更换二维码的问题
-	filename << "..\\bin\\skin\\WeChatRes\\" << to_string(rand() % 1000) << ".jpg";
+	filename = "..\\bin\\skin\\WeChatRes\\" + to_string(rand() % 1000) + ".jpg";
 	if (qrc_url.length() > 900)
 		qrc_url = qrc_url.substr(0, 900);
-	file = fopen(filename.str().c_str(), "wb");
+	file = fopen(filename.c_str(), "wb");
 	curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, qrc_url.c_str());
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)file);
@@ -226,8 +219,8 @@ void ListMainForm::DownloadQRC(string& qrc_url)
 	curl_easy_cleanup(curl);
 	fclose(file);
 	
-	m_pQRcode->SetBkImage(filename.str().c_str());
-	remove(filename.str().c_str());		//删除二维码文件
+	m_pQRcode->SetBkImage(filename.c_str());
+	remove(filename.c_str());		//删除二维码文件
 }
 
 static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -236,53 +229,46 @@ static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *use
 	return size * nmemb;
 }
 
-//获取post返回的信息
-string ListMainForm::GetLoginUrlData()
+string ListMainForm::PostReq(string& url, string& buff)
 {
 	CURL *curl;
 	CURLcode res;
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl = curl_easy_init();
+	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buff);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
+	res = curl_easy_perform(curl);
+	curl_easy_cleanup(curl);
+	if (curl && res == CURLE_OK)
+		return buff;
+	else
+		return MSG_NULL;
+}
+
+//获取post返回的信息
+string ListMainForm::GetLoginUrlData()
+{
 	string readBuffer;
 	CDuiString password = m_pPwd->GetText();
 	CDuiString username = m_pUserName->GetText();
 	CDuiString host = "http://localhost:8081/autologin?";
-	stringstream url;
-	url << host << "username="<< username << "&pwd=" << password;
-	string temp = url.str();
-	char* p_url = const_cast<char*>(temp.c_str());
+	string url = host + "username=" + username + "&pwd=" + password;
 
 	if (!(username[0] && password[0]))
-	{
 		m_pEdit->SetText(_T("        账号或密码为空"));
-		ShockWnd();
-		return MSG_NULL;
-	}
-	if (curl)
+	else if (PostReq(url, readBuffer) != MSG_NULL)
 	{
-		res = curl_easy_setopt(curl, CURLOPT_URL, p_url);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
-		res = curl_easy_perform(curl);
 		CutKeyValue(readBuffer);
-		if (res == CURLE_OK)
-		{
-			if (GetKeyValue(readBuffer, "code") == "1")
-			{
-				curl_easy_cleanup(curl);
-				return U8ToUnicode(readBuffer);
-			}
-			else
-			{
-				m_pEdit->SetText(_T("        账号或密码错误"));
-				ShockWnd();
-				return MSG_NULL;
-			}
-		}
+		if (GetKeyValue(readBuffer, "code") == "1")
+			return U8ToUnicode(readBuffer);
+		else
+			m_pEdit->SetText(_T("        账号或密码错误"));
 	}
-	m_pEdit->SetText(_T("   网络连接失败，请检查网络"));
+	else 
+		m_pEdit->SetText(_T("   网络连接失败，请检查网络"));
+
 	ShockWnd();
-	curl_global_cleanup();
 	return MSG_NULL;
 }
 
@@ -345,7 +331,6 @@ void ListMainForm::CutKeyValue(string& msg)
 		else  if (msg[i] == ',' && msg[i + 1] == '"')
 			msg[i] = '\n';		//逗号换成换行
 	}
-	//return msg;
 }
 
 string ListMainForm::MyMap(string key)
@@ -364,7 +349,7 @@ void ListMainForm::OnLogin()
 	string my_msg = GetLoginUrlData();//变量名小写开头
 	if (my_msg == MSG_NULL)
 		return;
-	//::MessageBox(NULL, CutKeyValue(my_msg).c_str(), _T("账号信息"), NULL);
+	//::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
 	string uid = GetKeyValue(my_msg,"uid");
 	string username = GetKeyValue(my_msg, "username");
 	string account = GetKeyValue(my_msg, "account");
@@ -381,12 +366,12 @@ void ListMainForm::OnLogin()
 	string bankname = GetKeyValue(my_msg, "bankname");
 
 	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
-	std::stringstream QRCurl;
-	QRCurl << "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" << username << "%0A账号:" << account << "%0A教学科目:" << bankname << "%0A分类名称:" << categoryName << "%0A教学书目:" << ledgeName << "%0A学校:" << schoolname;
-	//QRCurl << "http://api.k780.com:88/?app=qr.get&data=" << my_msg;
+	string QRCurl;
+	QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
+	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
 	//string temp = QRCurl.str();
 	//char* p_url = const_cast<char*>(temp.c_str());
-	DownloadQRC(QRCurl.str());
+	DownloadQRC(QRCurl);
 }
 
 
