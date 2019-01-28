@@ -1,5 +1,6 @@
 <?XML VERSION="1.0" ENCODING="UTF-8"?>
 <Window SIZE="280,400"  maxinfo="280,400" mininfo="280,400" roundcorner="5,5"  caption="0,0,0,28"  ><!--layeredimage="bk_null.png" layeredopacity="255"-->
+  <font id="1" name="黑体" size="16"  />
   <VerticalLayout name="mainbk"  bkcolor="#fff5f5f5" >
     <HorizontalLayout height="28">
       <button name="btn_logo" bkimage="wechat_logo.png" padding="9,2,0,0" pos="0,0,24,24" tooltip="点击打开官网" />
@@ -25,18 +26,7 @@
     
     <HorizontalLayout name="QRcodepage" visible="false" >
       <control />
-      <!--<button name="btn_QRcode2" height="190" weidth="45" />
-      <ActiveX name="flash" clsid="{D27CDB6E-AE6D-11CF-96B8-444553540000}" mouse="true" enabled="true" height="190" width="190" />
-      <button name="btn_QRcode1" height="190" weidth="45" />-->
       <button name="btn_QRcode" bkimage="datedu.png" padding="0,30,0,0" pos="0,0,190,190" tooltip="请用微信扫码查看信息"/>
-      <!--<GifAnim bkimage="二维码.gif" autoplay="true" />-->
-      <!--<WebBrowser name="web" autonavi="true" />-->
-      <control />
-    </HorizontalLayout>
-    
-    <HorizontalLayout name="personinfo" visible="false" >
-      <control />
-      
       <control />
     </HorizontalLayout>
     
@@ -79,7 +69,8 @@
       <control height="30" />
       <HorizontalLayout height="41" >
         <control />
-        <button name="btn_login" bkcolor="#ff1aad19" normalimage="login.png" hotimage="login_hot.png" width="210" height="41"  textcolor="#fff5f5f5"  />
+        <!--<button name="btn_login" bkcolor="#ff1aad19" normalimage="login.png" hotimage="login_hot.png" width="210" height="41" />-->
+        <button name="btn_login" bkcolor="#ff1aad19" hotbkcolor="#ff129611" text="登录" font="1" textcolor="#fff5f5f5" width="210" height="41" />
         <control />
       </HorizontalLayout>
       <control />
