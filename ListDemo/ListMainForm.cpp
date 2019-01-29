@@ -13,9 +13,9 @@ using namespace DuiLib;
 
 #define TIMER_ID_TEST 100
 #define TIMER_TIME_TEST 1000
-#define MSG_NULL "0"
+#define MSG_NULL ""
 
-#define K_V(name)GetKeyValue(my_msg,name);
+
 
 /*
 * 存放第二列数据
@@ -220,158 +220,70 @@ void ListMainForm::DownloadQRC(string& qrc_url)
 	}
 	curl_easy_cleanup(curl);
 	fclose(file);
-	
+
 	m_pQRcode->SetBkImage(filename.c_str());
 	remove(filename.c_str());		//删除二维码文件
 }
 
-static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
-{
-	((std::string*)userp)->append((char*)contents, size * nmemb);	
-	return size * nmemb;
-}
-
-string ListMainForm::PostReq(const string& url, string& buff)
-{
-	CURL *curl;
-	CURLcode res;
-	curl_global_init(CURL_GLOBAL_ALL);
-	curl = curl_easy_init();
-	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buff);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);	//传递所有的参数到WriteCallback
-	res = curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-	if (curl && res == CURLE_OK)
-		return buff;
-	else
-		return MSG_NULL;
-}
-
 //获取post返回的信息
-string ListMainForm::GetLoginUrlData()
+CUserInfo* ListMainForm::GetLoginUrlData()
 {
 	string readBuffer;
-	CDuiString password = m_pPwd->GetText();
-	CDuiString username = m_pUserName->GetText();
-	CDuiString host = "http://localhost:8081/autologin?";
+	string password = m_pPwd->GetText();
+	string username = m_pUserName->GetText();
+	string host = "http://localhost:8081/autologin?";
 	string url = host + "username=" + username + "&pwd=" + password;
-
 	if (!(username[0] && password[0]))
 		m_pEdit->SetText(_T("        账号或密码为空"));
-	else if (PostReq(url, readBuffer) != MSG_NULL)
-	{
-		CutKeyValue(readBuffer);
-		if (GetKeyValue(readBuffer, "code") == "1")
-			return U8ToUnicode(readBuffer);
-		else
-			m_pEdit->SetText(_T("        账号或密码错误"));
-	}
 	else 
-		m_pEdit->SetText(_T("   网络连接失败，请检查网络"));
-
-	ShockWnd();
-	return MSG_NULL;
-}
-
-//UTF-8转Unicode
-string ListMainForm::U8ToUnicode(const string& szU8)
-{
-	//UTF8 to Unicode
-	//预转换，得到所需空间的大小
-	LPCCH szU8_str = szU8.c_str();
-	int wcsLen = ::MultiByteToWideChar(CP_UTF8, NULL, szU8_str, strlen(szU8_str), NULL, 0);
-	//分配空间要给'\0'留个空间，MultiByteToWideChar不会给'\0'空间
-	wchar_t* wszString = new wchar_t[wcsLen + 1];
-	//转换
-	::MultiByteToWideChar(CP_UTF8, NULL, szU8_str, strlen(szU8_str), wszString, wcsLen);
-	//最后加上'\0'
-	wszString[wcsLen] = '\0';
-
-	char *m_char;
-	int len = WideCharToMultiByte(CP_ACP, 0, wszString, wcslen(wszString), NULL, 0, NULL, NULL);
-	m_char = new char[len + 1];
-	WideCharToMultiByte(CP_ACP, 0, wszString, wcslen(wszString), m_char, len, NULL, NULL);
-	m_char[len] = '\0';
-	return m_char;
-}
-
-//根据关键词获取键值对
-string ListMainForm::GetKeyValue(const string& msg, string key)
-{
-	int key_len = key.length();
-	int msg_len = msg.length();
-	int virtue_len;
-	size_t start_pos = 0;
-	size_t end_pos = 0;
-	start_pos = msg.find(key, start_pos);	//关键字第一个字符的位置
-	if (start_pos > msg_len)
-		return "信息不存在";
-	end_pos = msg.find("\n", start_pos);
-
-	if (end_pos > msg_len)
-		virtue_len = msg_len - start_pos - key_len;
-	virtue_len = end_pos - start_pos - key_len - 1;
-	string value = msg.substr(start_pos + key_len + 1, virtue_len);
-	return value;
-}
-
-//把每个键值对换行分割
-void ListMainForm::CutKeyValue(string& msg)
-{
-	int msg_len = msg.length();
-	int count = 0;
-	string temp;
-	for (int i = 0; i < msg_len; i++)
 	{
-		if (msg[i] == '"' || msg[i] == '{' || msg[i] == '}')
-		{
-			msg.erase(i, 1);	//去除引号和大括号
-			i--;
-			msg_len--;
-		}
-		else  if (msg[i] == ',' && msg[i + 1] == '"')
-			msg[i] = '\n';		//逗号换成换行
+		userinfo = new CUserInfo();
+		userctl.ParseFromJson(url, userinfo);
+		string code = userinfo->getCode();
+		if (code == "1")
+			return userinfo;
+		else if (code == MSG_NULL)
+			m_pEdit->SetText(_T("    网络连接失败，请稍候再试"));
+		else if (code == "-1")
+			m_pEdit->SetText(_T("         账号或密码错误"));
 	}
+	ShockWnd();
+	return NULL;
 }
 
-//string ListMainForm::MyMap(const string& key)
-//{
-//	string msg = GetLoginUrlData();
-//	string virtue = GetKeyValue(msg, key);
-//	map<string, string>key_virtue;
-//	key_virtue.insert(pair<string, string>(key, virtue));
-//	return key_virtue[key];
-//}
-
-
-//OnLogin
 void ListMainForm::OnLogin()
 {
-	string my_msg = GetLoginUrlData();//变量名小写开头
-	if (my_msg == MSG_NULL)
+	CUserInfo* my_info = GetLoginUrlData();
+	if (my_info == NULL)
 		return;
-	//::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
-	string uid = K_V("uid");
-	string username = K_V("username");
-	string account = K_V("account");
-	string status = K_V("status");
-	string errorNum = K_V("errorNum");
-	string siteurl = K_V("siteurl");
-	string userType = K_V("userType");
-	string stype = K_V("stype");
-	string categoryId = K_V("categoryId");
-	string categoryName = K_V("categoryName");
-	string ledgeName = K_V("ledgeName");
-	string schoolname = K_V("schoolname");
-	string bankid = K_V("bankid");
-	string bankname = K_V("bankname");
 
-	m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
-	string QRCurl;
-	QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
-	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
-	DownloadQRC(QRCurl);
+	InfoList* pFrame = new InfoList();
+	if (pFrame == NULL)
+		return;
+	pFrame->Create(NULL, _T("ListDemo"), UI_WNDSTYLE_FRAME, WS_EX_STATICEDGE | WS_EX_APPWINDOW, 0, 0, 600, 320);
+	return;
+	pFrame->CenterWindow();//居中窗口位置
+	::ShowWindow(*pFrame, SW_SHOW);//显示窗口
+
+
+	
+	//::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
+
+	//string username = my_info->getUserName();
+	//string uid = my_info->getId();
+	//string account = my_info->getAccount();
+	//string status = my_info->getStatus();
+	//string siteurl = my_info->getSiteurl();
+	//string categoryName = my_info->getLedgeName();
+	//string ledgeName = my_info->getLedgeName();
+	//string schoolname = my_info->getSchoolname();
+	//string bankname = my_info->getBankname();
+
+	//m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
+	//string QRCurl;
+	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
+	////QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
+	//DownloadQRC(QRCurl);
 }
 
 
@@ -520,7 +432,7 @@ void ListMainForm::SetColorTag()
 
 void ListMainForm::ChangeBk(const int& tag)
 {
-	switch(tag)
+	switch (tag)
 	{
 	case 1:Setbkc(m_pbkc_default->GetBkColor());
 		break;
@@ -530,14 +442,14 @@ void ListMainForm::ChangeBk(const int& tag)
 		break;
 	case 4:Setbkc(m_pbkc_red->GetBkColor());
 		break;
-	case 5: 
+	case 5:
 	{
 		LPTSTR path_image;
 		path_image = GetImgPath();
 		if (path_image)
-			m_pMainbk->SetBkImage(_T(path_image)); 
+			m_pMainbk->SetBkImage(_T(path_image));
 	}
-		break;
+	break;
 	}
 }
 /**

@@ -20,6 +20,8 @@
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
 
+#include "CUserControler.h"
+#include "InfoList.h"
 
 #include<iostream>
 #include <string>
@@ -99,25 +101,13 @@ public:
 	
 	void ChangeImg();
 
-	//void SetImagePath();
-
 	void ShockWnd();
 
 	void OnLogin();
 
 	void DownloadQRC(string& msg);
 
-	string GetLoginUrlData();
-
-	string GetKeyValue(const string& msg, string key);
-
-	string PostReq(const string& url, string& buff);
-
-	void CutKeyValue(string& msg);
-
-	string U8ToUnicode(const string& szU8);
-
-	//string MyMap(const string& key);
+	CUserInfo* GetLoginUrlData();
 
 	void ClickBack();
 
@@ -190,6 +180,12 @@ public:
 
 public:
     CPaintManagerUI m_pm;
+
+
+public:
+	CUserControler userctl;
+	CUserInfo* userinfo;
+	
 
 private:
     CButtonUI* m_pCloseBtn;  //此处成员变量用m_ 开头，请务必准守，不对外暴露的成员一律用private修饰
