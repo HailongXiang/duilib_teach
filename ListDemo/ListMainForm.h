@@ -184,7 +184,7 @@ public:
 
 public:
 	CUserControler userctl;
-	CUserInfo* userinfo;
+	
 	
 
 private:

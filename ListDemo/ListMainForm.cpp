@@ -237,7 +237,7 @@ CUserInfo* ListMainForm::GetLoginUrlData()
 		m_pEdit->SetText(_T("        账号或密码为空"));
 	else 
 	{
-		userinfo = new CUserInfo();
+		CUserInfo* userinfo = new CUserInfo();
 		userctl.ParseFromJson(url, userinfo);
 		string code = userinfo->getCode();
 		if (code == "1")
@@ -256,34 +256,30 @@ void ListMainForm::OnLogin()
 	CUserInfo* my_info = GetLoginUrlData();
 	if (my_info == NULL)
 		return;
-
+	SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	InfoList* pFrame = new InfoList();
-	if (pFrame == NULL)
-		return;
-	pFrame->Create(NULL, _T("ListDemo"), UI_WNDSTYLE_FRAME, WS_EX_STATICEDGE | WS_EX_APPWINDOW, 0, 0, 600, 320);
-	return;
-	pFrame->CenterWindow();//居中窗口位置
-	::ShowWindow(*pFrame, SW_SHOW);//显示窗口
+	pFrame->userinfo = my_info;
+	pFrame->CreatWnd(pFrame);
+	
 
 
 	
-	//::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
+	/*::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
+	string username = my_info->getUserName();
+	string uid = my_info->getId();
+	string account = my_info->getAccount();
+	string status = my_info->getStatus();
+	string siteurl = my_info->getSiteurl();
+	string categoryName = my_info->getLedgeName();
+	string ledgeName = my_info->getLedgeName();
+	string schoolname = my_info->getSchoolname();
+	string bankname = my_info->getBankname();*/
 
-	//string username = my_info->getUserName();
-	//string uid = my_info->getId();
-	//string account = my_info->getAccount();
-	//string status = my_info->getStatus();
-	//string siteurl = my_info->getSiteurl();
-	//string categoryName = my_info->getLedgeName();
-	//string ledgeName = my_info->getLedgeName();
-	//string schoolname = my_info->getSchoolname();
-	//string bankname = my_info->getBankname();
-
-	//m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
-	//string QRCurl;
-	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
-	////QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
-	//DownloadQRC(QRCurl);
+	/*m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
+	string QRCurl;
+	QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
+	//QRCurl = "http://api.k780.com:88/?app=qr.get&data=" + my_msg;
+	DownloadQRC(QRCurl);*/
 }
 
 

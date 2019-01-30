@@ -16,7 +16,7 @@ void InfoList::Init()
 	m_pRestoreBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("restorebtn")));
 	m_pMinBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("minbtn")));
 
-	m_pUserInfo = static_cast<CEditUI*>(m_pl.FindControl(_T("userinfo")));
+	m_pUserInfo = static_cast<CRichEditUI*>(m_pl.FindControl(_T("userinfo")));
 }
 
 LRESULT InfoList::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -39,24 +39,30 @@ LRESULT InfoList::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 	Init();
 
-	//ShowUserInfo();
+	ShowUserInfo();
 	SetTimer(this->m_hWnd, TIMER_ID_TEST, TIMER_TIME_TEST, 0);
 	return 0;
 }
 
+
+void InfoList::CreatWnd(InfoList* pFrame)
+{
+	pFrame->Create(NULL, _T("ListDemo"), UI_WNDSTYLE_FRAME, WS_EX_STATICEDGE | WS_EX_APPWINDOW, 0, 0, 600, 320);
+	if (pFrame == NULL)
+		return;
+	pFrame->CenterWindow();
+	::ShowWindow(*pFrame, SW_SHOW);
+
+}
+
 void InfoList::ShowUserInfo()
 {
-	//CUserInfo* userinfo = new CUserInfo();
-	ListMainForm* info = new ListMainForm();
-	CUserInfo* userinfo = info->GetLoginUrlData();
-
-
 	string username = userinfo->getUserName();
 	string uid = userinfo->getId();
 	string account = userinfo->getAccount();
 	string status = userinfo->getStatus();
 	string siteurl = userinfo->getSiteurl();
-	string categoryName = userinfo->getLedgeName();
+	string categoryName = userinfo->getCategoryName();
 	string ledgeName = userinfo->getLedgeName();
 	string schoolname = userinfo->getSchoolname();
 	string bankname = userinfo->getBankname();

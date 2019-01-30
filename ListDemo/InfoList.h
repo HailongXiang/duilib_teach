@@ -102,10 +102,14 @@ public:
 
 
 	void ShowUserInfo();
+	void CreatWnd(InfoList* pFrame);
 
 public:
 	CPaintManagerUI m_pl;
 	
+	CUserInfo* userinfo;
+
+
 
 public:
 	CButtonUI* m_pCloseBtn;
@@ -113,7 +117,7 @@ public:
 	CButtonUI* m_pRestoreBtn;
 	CButtonUI* m_pMinBtn;
 
-	CEditUI* m_pUserInfo;
+	CRichEditUI* m_pUserInfo;
 	CEditUI* m_pUserName;
 	CEditUI* m_pPwd;
 };

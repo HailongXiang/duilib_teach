@@ -15,6 +15,7 @@ static size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *use
 
 string CUserControler::PostReq(const string& url)
 {
+	Redirect(url);
 	CURL *curl;
 	CURLcode res;
 	string readBuffer;
@@ -26,6 +27,31 @@ string CUserControler::PostReq(const string& url)
 	res = curl_easy_perform(curl);
 	curl_easy_cleanup(curl);
 	if (curl && res == CURLE_OK)
+		return U8ToUnicode(readBuffer);
+	else
+		return MSG_NULL;
+}
+
+string CUserControler::Redirect(const string& url)
+{
+	CURL* curl;
+	CURLcode res;
+	string readBuffer;
+	curl = curl_easy_init();
+	if (curl)
+	{
+		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		CURL* url_r;
+		/*long rescode = 0;
+		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &rescode);*/
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, true);		//跟踪爬取重定向页面
+		curl_easy_getinfo(curl, CURLINFO_REDIRECT_URL, &url_r);		//获取重定向后url
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+		res = curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+	}
+	if (res == CURLE_OK)
 		return U8ToUnicode(readBuffer);
 	else
 		return MSG_NULL;
@@ -93,7 +119,7 @@ string CUserControler::GetKeyValue(const string& msg, string key)
 
 void CUserControler::ParseFromJson(string& url, CUserInfo* info)
 {
-	string& msg = PostReq(url);
+	string& msg = Redirect(url);
 	if (msg == MSG_NULL)
 		return;
 	CutKeyValue(msg);

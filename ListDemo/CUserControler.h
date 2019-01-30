@@ -22,6 +22,7 @@ public:
 	string U8ToUnicode(const string& szU8);
 	string GetKeyValue(const string& msg, string key);
 	void CutKeyValue(string& msg);
+	string Redirect(const string& url);
 
 	virtual ~CUserControler();
 };
