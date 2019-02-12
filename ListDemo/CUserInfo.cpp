@@ -16,8 +16,6 @@ string CUserInfo::getCode()
 	return m_code;
 }
 
-
-
 void CUserInfo::setId(string id)
 {
 	m_uid = id;

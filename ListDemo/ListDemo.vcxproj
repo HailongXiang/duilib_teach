@@ -293,6 +293,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="QRCWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CUserControler.h" />
@@ -300,11 +301,15 @@
     <ClInclude Include="InfoList.h" />
     <ClInclude Include="ListMainForm.h" />
     <ClInclude Include="MenuWnd.h" />
+    <ClInclude Include="QRCWnd.h" />
     <ClInclude Include="resource2.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\bin\skin\WeChatRes\WeChat_logo.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

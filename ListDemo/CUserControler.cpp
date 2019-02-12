@@ -145,7 +145,6 @@ void CUserControler::GetUserInfoFromFile(CUserInfo * info, const string & filepa
 {
 }
 
-
 CUserControler::~CUserControler()
 {
 }

@@ -1,27 +1,7 @@
 #pragma once
-#include <objbase.h>
-#include <zmouse.h>
-#include <exdisp.h>
-#include <comdef.h>
-#include <vector>
-#include <sstream>
-#include <io.h>
-#include <shellapi.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <Windows.h>
-#include <map>
-
-#include "MenuWnd.h"
-#include "..\DuiLib\UIlib.h"
 
 #include "ListMainForm.h"
-#include "CUserControler.h"
-
-#include<iostream>
-#include <string>
-#include "../libcURL/include/curl.h"
-
+#include "QRCWnd.h"
 using namespace DuiLib;
 
 class InfoList : public WindowImplBase
@@ -33,7 +13,6 @@ public:
 	
 	CDuiString GetSkinFolder()
 	{
-
 		return _T("skin\\WeChatRes\\main\\");
 	}
 
@@ -97,27 +76,28 @@ public:
 
 	void OnTimer(WPARAM wParam, LPARAM lParam); //¶¨Ê±Æ÷
 	void onTimerTest();
-	
 	void Init();
-
-
 	void ShowUserInfo();
 	void CreatWnd(InfoList* pFrame);
 
+	void CreatQRCWnd();
+	void SetTopMost();
 public:
 	CPaintManagerUI m_pl;
 	
 	CUserInfo* userinfo;
-
-
+	string user;
 
 public:
+	CButtonUI* m_pTopMostBtn;
 	CButtonUI* m_pCloseBtn;
 	CButtonUI* m_pMaxBtn;
 	CButtonUI* m_pRestoreBtn;
 	CButtonUI* m_pMinBtn;
+	CButtonUI* m_pPortraitBtn;
 
 	CRichEditUI* m_pUserInfo;
+
 	CEditUI* m_pUserName;
 	CEditUI* m_pPwd;
 };

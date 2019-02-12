@@ -31,6 +31,9 @@
     <ClCompile Include="InfoList.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="QRCWnd.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
@@ -50,10 +53,16 @@
     <ClInclude Include="InfoList.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="QRCWnd.h">
+      <Filter>Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc">
       <Filter>Source Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\bin\skin\WeChatRes\WeChat_logo.ico" />
   </ItemGroup>
 </Project>

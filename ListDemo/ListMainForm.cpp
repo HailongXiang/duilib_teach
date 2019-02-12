@@ -256,13 +256,12 @@ void ListMainForm::OnLogin()
 	CUserInfo* my_info = GetLoginUrlData();
 	if (my_info == NULL)
 		return;
+	
 	SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+	//::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 	InfoList* pFrame = new InfoList();
 	pFrame->userinfo = my_info;
 	pFrame->CreatWnd(pFrame);
-	
-
-
 	
 	/*::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
 	string username = my_info->getUserName();
@@ -492,6 +491,7 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		else if (msg.pSender == m_pLogin)
 		{
 			OnLogin();
+			return;
 		}
 		//主页面二维码图标按钮
 		else if (msg.pSender == m_pQRC_ioc)
