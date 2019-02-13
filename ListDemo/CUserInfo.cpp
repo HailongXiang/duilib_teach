@@ -115,6 +115,16 @@ string CUserInfo::getBankname()
 }
 
 
+void CUserInfo::setQRCFileName(string QRCfilename)
+{
+	m_QRCfilename = QRCfilename;
+}
+
+string CUserInfo::getQRCFileName()
+{
+	return m_QRCfilename;
+}
+
 
 CUserInfo::~CUserInfo()
 {

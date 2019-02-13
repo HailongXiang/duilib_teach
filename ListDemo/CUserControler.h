@@ -23,6 +23,7 @@ public:
 	string GetKeyValue(const string& msg, string key);
 	void CutKeyValue(string& msg);
 	string Redirect(const string& url);
+	string DownloadQRC(string& qrc_url);
 
 	virtual ~CUserControler();
 };

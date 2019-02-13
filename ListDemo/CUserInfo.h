@@ -39,6 +39,8 @@ public:
 	void setBankname(string bankname);
 	string getBankname();
 
+	void setQRCFileName(string QRCfilename);
+	string getQRCFileName();
 private:
 	string m_code;
 	string m_uid;
@@ -50,6 +52,7 @@ private:
 	string m_ledgename;
 	string m_bankname;
 	string m_status;
+	string m_QRCfilename;
 
 
 };

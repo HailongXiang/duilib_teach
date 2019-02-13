@@ -10,8 +10,10 @@ void QRCWnd::Init()
 	m_pQRCImage = static_cast<CButtonUI*>(m_pq.FindControl(_T("QRCimage")));
 }
 
-void QRCWnd::CreatWnd(QRCWnd* pQRC)
+void QRCWnd::CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo)
 {
+	QRCinfo = new CUserInfo();
+	QRCinfo = userinfo;
 	pQRC->Create(NULL, _T("QRCWnd"), UI_WNDSTYLE_FRAME, WS_EX_STATICEDGE | WS_EX_APPWINDOW, 0, 0, 256, 256);
 	if (pQRC == NULL)
 		return;
@@ -38,11 +40,15 @@ LRESULT QRCWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 
 	Init();
 
-	m_pQRCImage->SetBkImage("datedu.png");
+	string qrc_filename = QRCinfo->getQRCFileName();
+	m_pQRCImage->SetBkImage(qrc_filename.c_str());
+
 	POINT pt = MyGetCursorPos();
 	SetWindowPos(m_hWnd, NULL, pt.x, pt.y, 256, 256, SWP_SHOWWINDOW);
+	
 	return 0;
 }
+
 
 POINT QRCWnd::MyGetCursorPos()
 {
@@ -64,25 +70,6 @@ BOOL QRCWnd::CursorPos()
 		return true;
 }
 
-LRESULT QRCWnd::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	POINT pt; pt.x = GET_X_LPARAM(lParam); pt.y = GET_Y_LPARAM(lParam);
-	::ScreenToClient(*this, &pt);
-
-	RECT rcClient;
-	::GetClientRect(*this, &rcClient);
-	RECT rcCaption = m_pq.GetCaptionRect();
-	if (pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
-		&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom) {
-		CControlUI* pControl = static_cast<CControlUI*>(m_pq.FindControl(pt));
-		if (pControl && _tcscmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 &&
-			_tcscmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
-			_tcscmp(pControl->GetClass(), DUI_CTR_TEXT) != 0)
-			return HTCAPTION;
-	}
-	return HTCLIENT;
-}
-
 void QRCWnd::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == _T("click"))
@@ -90,14 +77,16 @@ void QRCWnd::Notify(TNotifyUI& msg)
 		if (msg.pSender == m_pQRCImage)
 		{
 			if (m_hWnd != NULL)
+				SetWindowPos(m_hWnd, NULL,0, 0, 0, 0, SWP_HIDEWINDOW);
 				//HWND wnd = FindWindow(NULL, "QRCWnd");
-				//ShowWindow(m_hWnd, SW_HIDE);
-				//::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
-				SendMessage(WM_CLOSE);
-				//DestroyWindow(m_hWnd);	
+				//SendMessage(WM_CLOSE);
+				//Close();
+				//DestroyWindow(m_hWnd);
 				//SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+				//::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 				//PostQuitMessage(0);
 				//delete this;
+			return;
 		}
 	}
 }
@@ -108,7 +97,6 @@ LRESULT QRCWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	BOOL bHandled = TRUE;
 	switch (uMsg) {
 	case WM_CREATE:        lRes = OnCreate(uMsg, wParam, lParam, bHandled); break;
-	case WM_NCHITTEST:     lRes = OnNcHitTest(uMsg, wParam, lParam, bHandled); break;
 	default:
 		bHandled = FALSE;
 	}
@@ -117,8 +105,3 @@ LRESULT QRCWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 }
 
-
-QRCWnd::~QRCWnd()
-{
-	
-}

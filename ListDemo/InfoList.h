@@ -74,8 +74,6 @@ public:
 		return 0;
 	}
 
-	void OnTimer(WPARAM wParam, LPARAM lParam); //¶¨Ê±Æ÷
-	void onTimerTest();
 	void Init();
 	void ShowUserInfo();
 	void CreatWnd(InfoList* pFrame);
@@ -85,8 +83,11 @@ public:
 public:
 	CPaintManagerUI m_pl;
 	
+public:
 	CUserInfo* userinfo;
 	string user;
+	
+	
 
 public:
 	CButtonUI* m_pTopMostBtn;

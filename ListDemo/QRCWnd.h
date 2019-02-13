@@ -1,11 +1,10 @@
 #pragma once
 #include "InfoList.h"
+
 class QRCWnd:public WindowImplBase
 {
 public:
 	QRCWnd();
-	~QRCWnd();
-
 
 public:
 	CDuiString GetSkinFolder()
@@ -25,20 +24,26 @@ public:
 
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	void Notify(TNotifyUI& msg);
 
+
+	void Notify(TNotifyUI& msg);
 	void Init();
 
-	void CreatWnd(QRCWnd* pFrame);
+	void CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo);
 	POINT MyGetCursorPos();
 	BOOL CursorPos();
+	//void DownloadQRC(string& qrc_url);
 
 	void Destroy()
 	{
 		//DestroyWindow(m_hWnd);
 		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 	}
+
+public:
+	string userinfo_QRC;
+	
+	CUserInfo* QRCinfo;
 
 public:
 	CPaintManagerUI m_pq;

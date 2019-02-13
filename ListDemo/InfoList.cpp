@@ -44,7 +44,6 @@ LRESULT InfoList::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 	ShowUserInfo();
 	SetForegroundWindow(m_hWnd);
-	
 	return 0;
 }
 
@@ -80,15 +79,18 @@ void InfoList::ShowUserInfo()
 
 	user = "姓名:" + username + "\n账号 : " + account + "\n教学科目 : " + bankname + "\n分类名称 : " + categoryName + "\n教学书目 : " + ledgeName + "\n学校 : " + schoolname;
 	m_pUserInfo->SetText(user.c_str());
+	//user = "姓名:" + username + "%0A账号 : " + account + "%0A教学科目 : " + bankname + "%0A分类名称 : " + categoryName + "%0A教学书目 : " + ledgeName + "%0A学校 : " + schoolname;
+	
 }
 
 void InfoList::CreatQRCWnd()
 {
 	QRCWnd* pQRC = new QRCWnd();
-	//pQRC->CreatWnd(pQRC);
-	if (pQRC == NULL) { Close(); return; }
-	pQRC->Create(m_hWnd, _T(""), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
-	pQRC->ShowModal();
+	pQRC->CreatWnd(pQRC, userinfo); 
+	
+	/*if (pQRC == NULL) { Close(); return; }
+	pQRC->Create(m_hWnd, _T("QRCWnd"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
+	pQRC->ShowModal();*/
 }
 
 void InfoList::SetTopMost()
@@ -103,7 +105,6 @@ void InfoList::SetTopMost()
 		SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		m_pTopMostBtn->SetBkImage("topmost_pushed.png");
 	}
-		
 }
 
 void InfoList::Notify(TNotifyUI& msg)
@@ -116,6 +117,7 @@ void InfoList::Notify(TNotifyUI& msg)
 		}
 		else if (msg.pSender == m_pCloseBtn)
 		{
+			remove(userinfo->getQRCFileName().c_str());		//删除二维码文件
 			PostQuitMessage(0);
 			//DestroyWindow(m_hWnd);
 			return;
@@ -141,7 +143,7 @@ void InfoList::Notify(TNotifyUI& msg)
 		//{
 		//	HWND wnd = FindWindow(NULL, "QRCWnd");
 		//	//HWND wnd1 = FindWindow(NULL, "InfoList");
-		//	DestroyWindow(wnd);
+		//	::SendMessage(wnd, WM_CLOSE, 0, 0);
 		//}
 	}
 }
