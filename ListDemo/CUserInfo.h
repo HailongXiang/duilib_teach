@@ -20,6 +20,9 @@ public:
 
 	void setAccount(string account);
 	string getAccount();
+	
+	void setPwd(string pwd);
+	string getPwd();
 
 	void setStatus(string status);
 	string getStatus();
@@ -41,11 +44,14 @@ public:
 
 	void setQRCFileName(string QRCfilename);
 	string getQRCFileName();
+
+
 private:
 	string m_code;
 	string m_uid;
 	string m_username;
 	string m_account;
+	string m_pwd;
 	string m_siteurl;
 	string m_schoolname;
 	string m_categoryname;

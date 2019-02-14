@@ -294,6 +294,7 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="QRCWnd.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CUserControler.h" />
@@ -304,6 +305,7 @@
     <ClInclude Include="QRCWnd.h" />
     <ClInclude Include="resource2.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc" />

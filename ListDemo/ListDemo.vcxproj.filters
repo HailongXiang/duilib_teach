@@ -34,6 +34,9 @@
     <ClCompile Include="QRCWnd.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
@@ -56,6 +59,7 @@
     <ClInclude Include="QRCWnd.h">
       <Filter>Window</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc">

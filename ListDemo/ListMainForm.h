@@ -183,7 +183,7 @@ public:
 
 
 public:
-	CUserControler userctl;
+	CUserControler m_userctl;
 	
 	
 
@@ -215,7 +215,5 @@ private:
     CVerticalLayoutUI* m_pSkinlayout;
     CVerticalLayoutUI* m_pLoginpage;
     CVerticalLayoutUI* m_pMainbk;
-
-	CWebBrowserUI* m_pWebBrowser;
 
 };

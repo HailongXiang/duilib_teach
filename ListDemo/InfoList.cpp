@@ -15,7 +15,6 @@ void InfoList::Init()
 	m_pMaxBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("maxbtn")));
 	m_pRestoreBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("restorebtn")));
 	m_pMinBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("minbtn")));
-
 	m_pPortraitBtn = static_cast<CButtonUI*>(m_pl.FindControl(_T("portrait")));
 
 	m_pUserInfo = static_cast<CRichEditUI*>(m_pl.FindControl(_T("userinfo")));
@@ -38,7 +37,7 @@ LRESULT InfoList::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 	ASSERT(pRoot && "Failed to parse XML");
 	m_pl.AttachDialog(pRoot);
-	m_pl.AddNotifier(this);		//注册Notifier
+	m_pl.AddNotifier(this);
 
 	Init();
 
@@ -59,23 +58,15 @@ void InfoList::CreatWnd(InfoList* pFrame)
 
 void InfoList::ShowUserInfo()
 {
-	string username = userinfo->getUserName();
-	string uid = userinfo->getId();
-	string account = userinfo->getAccount();
-	string status = userinfo->getStatus();
-	string siteurl = userinfo->getSiteurl();
-	string categoryName = userinfo->getCategoryName();
-	string ledgeName = userinfo->getLedgeName();
-	string schoolname = userinfo->getSchoolname();
-	string bankname = userinfo->getBankname();
-
-	//CListTextElementUI* pListElement = new CListTextElementUI;
-	////pListElement->SetTag(i);
-	//if (pListElement != NULL)
-	//{
-	//	::PostMessage(this->m_hWnd, WM_ADDLISTITEM, 0L, (LPARAM)pListElement);
-	//}
-
+	string username = m_puserinfo->getUserName();
+	string uid = m_puserinfo->getId();
+	string account = m_puserinfo->getAccount();
+	string status = m_puserinfo->getStatus();
+	string siteurl = m_puserinfo->getSiteurl();
+	string categoryName = m_puserinfo->getCategoryName();
+	string ledgeName = m_puserinfo->getLedgeName();
+	string schoolname = m_puserinfo->getSchoolname();
+	string bankname = m_puserinfo->getBankname();
 
 	user = "姓名:" + username + "\n账号 : " + account + "\n教学科目 : " + bankname + "\n分类名称 : " + categoryName + "\n教学书目 : " + ledgeName + "\n学校 : " + schoolname;
 	m_pUserInfo->SetText(user.c_str());
@@ -86,7 +77,7 @@ void InfoList::ShowUserInfo()
 void InfoList::CreatQRCWnd()
 {
 	QRCWnd* pQRC = new QRCWnd();
-	pQRC->CreatWnd(pQRC, userinfo); 
+	pQRC->CreatWnd(pQRC, m_puserinfo);
 	
 	/*if (pQRC == NULL) { Close(); return; }
 	pQRC->Create(m_hWnd, _T("QRCWnd"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 0, 0, NULL);
@@ -117,9 +108,8 @@ void InfoList::Notify(TNotifyUI& msg)
 		}
 		else if (msg.pSender == m_pCloseBtn)
 		{
-			remove(userinfo->getQRCFileName().c_str());		//删除二维码文件
+			remove(m_puserinfo->getQRCFileName().c_str());		//删除二维码文件
 			PostQuitMessage(0);
-			//DestroyWindow(m_hWnd);
 			return;
 		}
 		else if (msg.pSender == m_pMinBtn)
@@ -139,12 +129,6 @@ void InfoList::Notify(TNotifyUI& msg)
 		{
 			CreatQRCWnd();
 		}
-		//else if (msg.pSender != m_pPortraitBtn)
-		//{
-		//	HWND wnd = FindWindow(NULL, "QRCWnd");
-		//	//HWND wnd1 = FindWindow(NULL, "InfoList");
-		//	::SendMessage(wnd, WM_CLOSE, 0, 0);
-		//}
 	}
 }
 

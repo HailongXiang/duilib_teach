@@ -12,8 +12,8 @@ void QRCWnd::Init()
 
 void QRCWnd::CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo)
 {
-	QRCinfo = new CUserInfo();
-	QRCinfo = userinfo;
+	m_pQRCinfo = new CUserInfo();
+	m_pQRCinfo = userinfo;
 	pQRC->Create(NULL, _T("QRCWnd"), UI_WNDSTYLE_FRAME, WS_EX_STATICEDGE | WS_EX_APPWINDOW, 0, 0, 256, 256);
 	if (pQRC == NULL)
 		return;
@@ -40,7 +40,7 @@ LRESULT QRCWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 
 	Init();
 
-	string qrc_filename = QRCinfo->getQRCFileName();
+	string qrc_filename = m_pQRCinfo->getQRCFileName();
 	m_pQRCImage->SetBkImage(qrc_filename.c_str());
 
 	POINT pt = MyGetCursorPos();
@@ -49,25 +49,11 @@ LRESULT QRCWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 	return 0;
 }
 
-
 POINT QRCWnd::MyGetCursorPos()
 {
 	POINT p;
 	GetCursorPos(&p);
 	return p;
-}
-
-BOOL QRCWnd::CursorPos()
-{
-	POINT pt = MyGetCursorPos();
-	ScreenToClient(*this, &pt);
-	/*RECT rcClient;
-	GetClientRect(*this, &rcClient);*/
-	//if (pt.x > rcClient.right || pt.x < rcClient.left || pt.y < rcClient.top || pt.y >rcClient.bottom)
-	if (pt.x < 0 || pt.y < 0)
-		return false;
-	else
-		return true;
 }
 
 void QRCWnd::Notify(TNotifyUI& msg)

@@ -84,7 +84,7 @@ public:
 	CPaintManagerUI m_pl;
 	
 public:
-	CUserInfo* userinfo;
+	CUserInfo* m_puserinfo;
 	string user;
 	
 	

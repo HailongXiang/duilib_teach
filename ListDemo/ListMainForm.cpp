@@ -13,7 +13,7 @@ using namespace DuiLib;
 
 #define TIMER_ID_TEST 100
 #define TIMER_TIME_TEST 1000
-#define MSG_NULL ""
+#define MSG_NULL "0"
 
 
 
@@ -64,7 +64,7 @@ void ListMainForm::Init()
 	m_pUserName = static_cast<CEditUI*>(m_pm.FindControl(_T("uername")));
 	m_pPwd = static_cast<CEditUI*>(m_pm.FindControl(_T("password")));
 
-	m_pWebBrowser = static_cast<CWebBrowserUI*>(m_pm.FindControl(_T("web")));
+	//m_pWebBrowser = static_cast<CWebBrowserUI*>(m_pm.FindControl(_T("web")));
 }
 
 /**
@@ -189,42 +189,6 @@ void ListMainForm::ChangeImg()
 		m_pEdit->SetText(_T("    请选择正确的图片路径哦"));
 }
 
-////完成数据保存功能
-//size_t WriteData(void *ptr, size_t size, size_t nmemb, FILE *stream)
-//{
-//	int written = 0;
-//	written = fwrite(ptr, size, nmemb, stream);	//fwrite向二进制文件写入一个数据块，ptr 获取数据的地址，stream 目标文件指针
-//	return written;		//返回写入的字符数
-//}
-//
-////根据url下载二维码并重命名到指定文件夹中
-//void ListMainForm::DownloadQRC(string& qrc_url)
-//{
-//	CURL *curl;
-//	CURLcode res;
-//	FILE *file = NULL;
-//	string filename;
-//	//用随机数命名二维码文件，解决更换账号无法自动更换二维码的问题
-//	filename = "..\\bin\\skin\\WeChatRes\\" + to_string(rand() % 1000) + ".jpg";
-//	if (qrc_url.length() > 900)
-//		qrc_url = qrc_url.substr(0, 900);
-//	file = fopen(filename.c_str(), "wb");
-//	curl = curl_easy_init();
-//	curl_easy_setopt(curl, CURLOPT_URL, qrc_url.c_str());
-//	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)file);
-//	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteData);
-//	res = curl_easy_perform(curl);
-//	if ((res != CURLE_OK) && (res != CURLE_WRITE_ERROR)) {
-//		m_pEdit->SetText(_T("        二维码更新失败"));
-//		return;
-//	}
-//	curl_easy_cleanup(curl);
-//	fclose(file);
-//
-//	m_pQRcode->SetBkImage(filename.c_str());
-//	remove(filename.c_str());		//删除二维码文件
-//}
-
 //获取post返回的信息
 CUserInfo* ListMainForm::GetLoginUrlData()
 {
@@ -237,13 +201,26 @@ CUserInfo* ListMainForm::GetLoginUrlData()
 		m_pEdit->SetText(_T("        账号或密码为空"));
 	else 
 	{
-		CUserInfo* userinfo = new CUserInfo();
-		userctl.ParseFromJson(url, userinfo);
-		string code = userinfo->getCode();
+		CUserInfo* m_puserinfo = new CUserInfo();
+		m_userctl.ParseFromJson(url, m_puserinfo);
+		string code = m_puserinfo->getCode();
+		string account = m_puserinfo->getAccount();
+		string pwd = m_puserinfo->getPwd();
 		if (code == "1")
-			return userinfo;
+			return m_puserinfo;
 		else if (code == MSG_NULL)
-			m_pEdit->SetText(_T("    网络连接失败，请稍候再试"));
+		{
+			if (username == account && password == pwd)
+			{
+				string prompt = "网络连接失败，是否登录本地账号:\n" + account;
+				int res = MessageBox(m_hWnd , prompt.c_str(), _T("提示"), MB_YESNO);
+				if (res == IDYES)
+					return m_puserinfo;
+				else
+					return NULL;
+			}
+			m_pEdit->SetText(_T("  网络连接失败，请检查网络"));
+		}
 		else if (code == "-1")
 			m_pEdit->SetText(_T("         账号或密码错误"));
 	}
@@ -257,23 +234,10 @@ void ListMainForm::OnLogin()
 	if (my_info == NULL)
 		return;
 	SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_HIDEWINDOW);
-	//SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
-	//::SendMessage(m_hWnd, WM_CLOSE, 0, 0);
-	InfoList* pFrame = new InfoList();
-	pFrame->userinfo = my_info;
-	pFrame->CreatWnd(pFrame);
+	InfoList* pInfoFrame = new InfoList();
+	pInfoFrame->m_puserinfo = my_info;
+	pInfoFrame->CreatWnd(pInfoFrame);
 	
-	/*::MessageBox(NULL, my_msg.c_str(), _T("账号信息"), NULL);
-	string username = my_info->getUserName();
-	string uid = my_info->getId();
-	string account = my_info->getAccount();
-	string status = my_info->getStatus();
-	string siteurl = my_info->getSiteurl();
-	string categoryName = my_info->getLedgeName();
-	string ledgeName = my_info->getLedgeName();
-	string schoolname = my_info->getSchoolname();
-	string bankname = my_info->getBankname();*/
-
 	/*m_pEdit->SetText(_T("        ") + _bstr_t(username.c_str()) + _T("登录成功"));
 	string QRCurl;
 	QRCurl = "http://api.k780.com:88/?app=qr.get&data=账号基本信息:%0A姓名:" + username + "%0A账号:" + account + "%0A教学科目:" + bankname + "%0A分类名称:" + categoryName + "%0A教学书目:" + ledgeName + "%0A学校:" + schoolname;
@@ -483,7 +447,6 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 		{
 			ChangeImg();
 		}
-		//左上角logo
 		else if (msg.pSender == m_pLogo)
 		{
 			ShellExecute(NULL, _T("open"), _T("http://www.datedu.cn/"), NULL, NULL, SW_SHOW);
@@ -493,7 +456,6 @@ void  ListMainForm::Notify(TNotifyUI& msg)
 			OnLogin();
 			return;
 		}
-		//主页面二维码图标按钮
 		else if (msg.pSender == m_pQRC_ioc)
 		{
 			ClickQRCioc();

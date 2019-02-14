@@ -1,5 +1,6 @@
 #pragma once
 #include "CUserInfo.h"
+#include "Utils.h"
 #include "../libcURL/include/curl.h"
 #include <string>
 /***
@@ -13,18 +14,15 @@ class CUserControler
 {
 public:
 	CUserControler();
+	virtual ~CUserControler();
 
+public:
 	void ParseFromJson(string& url, CUserInfo* info);
 	void SaveUserInfoToFile(CUserInfo* info, const string& filepath);
 	void GetUserInfoFromFile(CUserInfo* info, const string& filepath);
+	void SetK_V(CUserInfo* info, const string& msg);
 
-	string PostReq(const string& url);
-	string U8ToUnicode(const string& szU8);
-	string GetKeyValue(const string& msg, string key);
-	void CutKeyValue(string& msg);
-	string Redirect(const string& url);
-	string DownloadQRC(string& qrc_url);
-
-	virtual ~CUserControler();
+public:
+	Utils m_utils;
 };
 

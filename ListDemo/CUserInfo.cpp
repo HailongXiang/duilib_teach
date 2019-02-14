@@ -49,6 +49,17 @@ string CUserInfo::getAccount()
 }
 
 
+void CUserInfo::setPwd(string pwd)
+{
+	m_pwd = pwd;
+}
+
+string CUserInfo::getPwd()
+{
+	return m_pwd;
+}
+
+
 void CUserInfo::setStatus(string status)
 {
 	m_status = status;

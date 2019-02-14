@@ -31,19 +31,11 @@ public:
 
 	void CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo);
 	POINT MyGetCursorPos();
-	BOOL CursorPos();
-	//void DownloadQRC(string& qrc_url);
-
-	void Destroy()
-	{
-		//DestroyWindow(m_hWnd);
-		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-	}
 
 public:
 	string userinfo_QRC;
 	
-	CUserInfo* QRCinfo;
+	CUserInfo* m_pQRCinfo;
 
 public:
 	CPaintManagerUI m_pq;
