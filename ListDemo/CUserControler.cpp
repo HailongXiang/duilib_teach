@@ -10,10 +10,10 @@ CUserControler::CUserControler()
 }
 
 
-#define K_V(name) m_utils.GetKeyValue(msg, name)
+#define K_V(name) m_stringutils.GetKeyValue(msg, name)
 void CUserControler::ParseFromJson(string& url, CUserInfo* info)
 {
-	string& msg = m_utils.Redirect(url);
+	string& msg = m_netutils.Redirect(url);
 	if (msg == MSG_NULL)
 	{
 		GetUserInfoFromFile(info, INFOFILENAME);
@@ -39,7 +39,7 @@ void CUserControler::SetK_V(CUserInfo* info, const string& msg)
 	info->setBankname(K_V("bankname"));
 
 	string qrc_info = "账号基本信息:%0A姓名:" + info->getUserName() + "%0A账号:" + info->getAccount() + "%0A教学科目:" + info->getBankname() + "%0A分类名称:" + info->getCategoryName() + "%0A教学书目:" + info->getLedgeName() + "%0A学校:" + info->getSchoolname();
-	info->setQRCFileName(m_utils.DownloadQRC(qrc_info));
+	info->setQRCFileName(m_netutils.DownloadQRC(qrc_info));
 }
 
 #define FPRINTF(key,value) fprintf(fp,"%s%s%s",key,value,"\n")
@@ -76,7 +76,7 @@ void CUserControler::GetUserInfoFromFile(CUserInfo * info, const string & filepa
 	fscanf(fp, "%s", &readbuff);
 	SetK_V(info, readbuff);
 	info->setCode(MSG_NULL);
-}
+}	
 
 
 CUserControler::~CUserControler()

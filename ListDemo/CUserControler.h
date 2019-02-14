@@ -1,6 +1,6 @@
 #pragma once
 #include "CUserInfo.h"
-#include "Utils.h"
+#include "CNetUtils.h"
 #include "../libcURL/include/curl.h"
 #include <string>
 /***
@@ -23,6 +23,7 @@ public:
 	void SetK_V(CUserInfo* info, const string& msg);
 
 public:
-	Utils m_utils;
+	CNetUtils m_netutils;
+	CStringUtils m_stringutils;
 };
 

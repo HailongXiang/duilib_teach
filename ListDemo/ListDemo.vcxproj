@@ -271,6 +271,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CStringUtils.cpp" />
     <ClCompile Include="CUserControler.cpp" />
     <ClCompile Include="CUserInfo.cpp" />
     <ClCompile Include="InfoList.cpp" />
@@ -294,9 +295,10 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="QRCWnd.cpp" />
-    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="CNetUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CStringUtils.h" />
     <ClInclude Include="CUserControler.h" />
     <ClInclude Include="CUserInfo.h" />
     <ClInclude Include="InfoList.h" />
@@ -305,7 +307,7 @@
     <ClInclude Include="QRCWnd.h" />
     <ClInclude Include="resource2.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="CNetUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc" />
