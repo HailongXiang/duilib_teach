@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{835a4270-af43-4902-b7d8-950a553752e0}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Controler">
+      <UniqueIdentifier>{acffb325-6458-44e4-a7a8-8e4a2dc36804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{94db89a5-73ad-4ab8-89f4-484fa47af6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{a54780b0-5cbe-4772-89f1-48cf114e0e59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ListMainForm.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="InfoList.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="QRCWnd.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ListMainForm.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuWnd.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="resource2.h" />
+    <ClInclude Include="InfoList.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="QRCWnd.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ListDemo1.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\bin\skin\WeChatRes\WeChat_logo.ico" />
+  </ItemGroup>
+</Project>
