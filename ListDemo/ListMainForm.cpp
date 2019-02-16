@@ -199,7 +199,7 @@ CUserInfo* ListMainForm::GetLoginUrlData()
 	string url = host + "username=" + username + "&pwd=" + password;
 	if (!(username[0] && password[0]))
 		m_pEdit->SetText(_T("        账号或密码为空"));
-	else 
+	else
 	{
 		CUserInfo* m_puserinfo = new CUserInfo();
 		m_userctl.ParseFromJson(url, m_puserinfo);

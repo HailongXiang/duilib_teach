@@ -5,28 +5,13 @@
       <UniqueIdentifier>{835a4270-af43-4902-b7d8-950a553752e0}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{9aab8cfc-fe99-497d-a089-1b79febac531}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controler">
-      <UniqueIdentifier>{acffb325-6458-44e4-a7a8-8e4a2dc36804}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Window">
       <UniqueIdentifier>{94db89a5-73ad-4ab8-89f4-484fa47af6b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{a54780b0-5cbe-4772-89f1-48cf114e0e59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CUserInfo.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="CUserControler.cpp">
-      <Filter>Controler</Filter>
     </ClCompile>
     <ClCompile Include="ListMainForm.cpp">
       <Filter>Window</Filter>
@@ -37,21 +22,9 @@
     <ClCompile Include="QRCWnd.cpp">
       <Filter>Window</Filter>
     </ClCompile>
-    <ClCompile Include="CNetUtils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="CStringUtils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="CUserInfo.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="CUserControler.h">
-      <Filter>Controler</Filter>
-    </ClInclude>
     <ClInclude Include="ListMainForm.h">
       <Filter>Window</Filter>
     </ClInclude>
@@ -64,12 +37,6 @@
     </ClInclude>
     <ClInclude Include="QRCWnd.h">
       <Filter>Window</Filter>
-    </ClInclude>
-    <ClInclude Include="CNetUtils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="CStringUtils.h">
-      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

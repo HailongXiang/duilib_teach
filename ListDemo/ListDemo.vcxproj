@@ -79,6 +79,8 @@
     <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">
     <OutDir>$(SolutionDir)\bin\</OutDir>
@@ -172,8 +174,9 @@
       <MapFileName>.\Debug/ListDemo.map</MapFileName>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>duilib_d.lib;ws2_32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>duilib_d.lib;ws2_32.lib;wldap32.lib;modellib.lib;stringutilslib.lib;controlerdll.lib;netutilslib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Debug;$(SolutionDir)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -271,9 +274,6 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CStringUtils.cpp" />
-    <ClCompile Include="CUserControler.cpp" />
-    <ClCompile Include="CUserInfo.cpp" />
     <ClCompile Include="InfoList.cpp" />
     <ClCompile Include="ListMainForm.cpp" />
     <ClCompile Include="Main.cpp">
@@ -295,19 +295,14 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="QRCWnd.cpp" />
-    <ClCompile Include="CNetUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CStringUtils.h" />
-    <ClInclude Include="CUserControler.h" />
-    <ClInclude Include="CUserInfo.h" />
     <ClInclude Include="InfoList.h" />
     <ClInclude Include="ListMainForm.h" />
     <ClInclude Include="MenuWnd.h" />
     <ClInclude Include="QRCWnd.h" />
     <ClInclude Include="resource2.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="CNetUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ListDemo1.rc" />

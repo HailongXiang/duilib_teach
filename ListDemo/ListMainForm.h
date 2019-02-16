@@ -20,18 +20,18 @@
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
 
-#include "CUserControler.h"
+#include "..\controlerdll\CUserControler.h"
 #include "InfoList.h"
 
 #include<iostream>
 #include <string>
-#include "../libcURL/include/curl.h"
-
-#ifdef _DEBUG
-#pragma comment(lib, "../libcURL/lib/libcurld.lib")
-#else
-#pragma comment(lib, "../libcURL/lib/libcurl.lib")
-#endif
+//#include "../libcURL/include/curl.h"
+//
+//#ifdef _DEBUG
+//#pragma comment(lib, "../libcURL/lib/libcurld.lib")
+//#else
+//#pragma comment(lib, "../libcURL/lib/libcurl.lib")
+//#endif
 
 #include "kutfconv.h"
 
@@ -104,8 +104,6 @@ public:
 	void ShockWnd();
 
 	void OnLogin();
-
-	void DownloadQRC(string& msg);
 
 	CUserInfo* GetLoginUrlData();
 
