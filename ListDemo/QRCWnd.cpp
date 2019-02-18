@@ -40,20 +40,20 @@ LRESULT QRCWnd::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled
 
 	Init();
 
-	string qrc_filename = m_pQRCinfo->getQRCFileName();
-	m_pQRCImage->SetBkImage(qrc_filename.c_str());
-
-	POINT pt = MyGetCursorPos();
-	SetWindowPos(m_hWnd, NULL, pt.x, pt.y, 256, 256, SWP_SHOWWINDOW);
-	
+	SetWndSize();
 	return 0;
 }
 
-POINT QRCWnd::MyGetCursorPos()
+
+void QRCWnd::SetWndSize()
 {
-	POINT p;
-	GetCursorPos(&p);
-	return p;
+	string qrc_filename = m_pQRCinfo->getQRCFileName();
+	m_pQRCImage->SetBkImage(qrc_filename.c_str());
+
+	POINT pt;
+	GetCursorPos(&pt);
+	SetWindowPos(m_hWnd, NULL, pt.x, pt.y, 256, 256, SWP_SHOWWINDOW);
+	m_pq.SetOpacity(BYTE("40"));
 }
 
 void QRCWnd::Notify(TNotifyUI& msg)

@@ -30,7 +30,7 @@ public:
 	void Init();
 
 	void CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo);
-	POINT MyGetCursorPos();
+	void SetWndSize();
 
 public:
 	string userinfo_QRC;
