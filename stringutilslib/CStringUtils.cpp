@@ -50,7 +50,7 @@ string CStringUtils::GetKeyValue(const string& msg, string key)
 {
 	int key_len = key.length();
 	int msg_len = msg.length();
-	int virtue_len;
+	int value_len;
 	size_t start_pos = 0;
 	size_t end_pos = 0;
 	start_pos = msg.find(key, start_pos);	//关键字第一个字符的位置
@@ -59,9 +59,9 @@ string CStringUtils::GetKeyValue(const string& msg, string key)
 	end_pos = msg.find("\n", start_pos);
 
 	if (end_pos > msg_len)
-		virtue_len = msg_len - start_pos - key_len;
-	virtue_len = end_pos - start_pos - key_len - 1;
-	string value = msg.substr(start_pos + key_len + 1, virtue_len);
+		value_len = msg_len - start_pos - key_len;
+	value_len = end_pos - start_pos - key_len - 1;
+	string value = msg.substr(start_pos + key_len + 1, value_len);
 	return value;
 }
 
