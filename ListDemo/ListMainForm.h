@@ -20,23 +20,15 @@
 #include "MenuWnd.h"
 #include "..\DuiLib\UIlib.h"
 
-#include "..\controlerdll\CUserControler.h"
+#include "CUserControler.h"
 #include "InfoList.h"
 
 #include<iostream>
 #include <string>
-//#include "../libcURL/include/curl.h"
-//
-//#ifdef _DEBUG
-//#pragma comment(lib, "../libcURL/lib/libcurld.lib")
-//#else
-//#pragma comment(lib, "../libcURL/lib/libcurl.lib")
-//#endif
 
 #include "kutfconv.h"
 
 using namespace DuiLib;
-
 
 #define WM_ADDLISTITEM WM_USER + 50
 
