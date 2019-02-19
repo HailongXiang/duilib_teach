@@ -32,15 +32,11 @@ public:
 	void CreatWnd(QRCWnd* pQRC, CUserInfo* userinfo);
 	void SetWndSize();
 
-public:
-	string userinfo_QRC;
-	
-	CUserInfo* m_pQRCinfo;
-
-public:
+private:
 	CPaintManagerUI m_pq;
 
-public:
 	CButtonUI* m_pQRCImage;
+	string userinfo_QRC;
+	CUserInfo* m_pQRCinfo;
 };
 

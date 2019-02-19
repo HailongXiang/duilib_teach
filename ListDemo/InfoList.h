@@ -80,16 +80,16 @@ public:
 
 	void CreatQRCWnd();
 	void SetTopMost();
-public:
-	CPaintManagerUI m_pl;
-	
+
+
 public:
 	CUserInfo* m_puserinfo;
+private:
+	CPaintManagerUI m_pl;
 	string user;
 	
 	
-
-public:
+private:
 	CButtonUI* m_pTopMostBtn;
 	CButtonUI* m_pCloseBtn;
 	CButtonUI* m_pMaxBtn;
