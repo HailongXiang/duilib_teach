@@ -2,7 +2,7 @@
 #include "CUserControler.h"
 #define MSG_NULL "0"
 #define MSG_OK "1"
-#define INFOFILENAME "userinfo.txt"
+
 
 
 CUserControler::CUserControler()
@@ -10,17 +10,22 @@ CUserControler::CUserControler()
 }
 
 #define K_V(name) m_stringutils.GetKeyValue(msg, name)
-void CUserControler::ParseFromJson(string& url, CUserInfo* info)
+void CUserControler::ParseFromJson(string& url, CUserInfo* info,string infofilename)
 {
 	string msg = m_netutils.Redirect(url);
 	if (msg == MSG_NULL)
 	{
-		GetUserInfoFromFile(info, INFOFILENAME);
+		//GetUserInfoFromFile(info, INFOFILENAME);
+		GetUserFromDB(info);
+		SetK_V(info, msg);
+		info->setCode(MSG_NULL);
 		return;
 	}
 	info->setCode(K_V("code"));
+
 	SetK_V(info, msg);
-	SaveUserInfoToFile(info, INFOFILENAME);
+	//SaveUserInfoToFile(info, infofilename);
+	SaveUserToDB(info, msg);
 }
 
 void CUserControler::SetK_V(CUserInfo* info, const string& msg)
@@ -75,6 +80,54 @@ void CUserControler::GetUserInfoFromFile(CUserInfo * info, const string & filepa
 	fscanf(fp, "%s", &readbuff);
 	SetK_V(info, readbuff);
 	info->setCode(MSG_NULL);
+}
+
+
+//#define ADDUSER(keyname,value) m_pdb->AddUser(keyname, value);
+#define GTOU m_stringutils.G2U
+void CUserControler::SaveUserToDB(CUserInfo* info,const string& msg)
+{
+	CSQLiteUtils* m_pdb = new CSQLiteUtils();
+	int nRes = m_pdb->Open("..\\ListDemo\\login.db3");
+	if (nRes != SQLITE_OK)
+	{
+		MessageBox(NULL, L"无法打开数据库", L"错误", MB_OK);
+		return;
+	}
+	SetK_V(info, msg);
+
+	string userinfo = "'" \
+		+ GTOU(info->getId().c_str()) + "','" + GTOU(info->getAccount().c_str()) + "','"  \
+		+ GTOU(info->getPwd().c_str()) + "','" + GTOU(info->getUserName().c_str()) + "','" \
+		+ GTOU(info->getCategoryName().c_str()) + "','" + GTOU(info->getLedgeName().c_str()) + "','"\
+		+ GTOU(info->getSchoolname().c_str()) + "','" + GTOU(info->getBankname().c_str()) + "'";
+	m_pdb->AddUser(userinfo);
+	//ADDUSER("username", info->getUserName());
+	//ADDUSER("uid", info->getId());
+	//ADDUSER("account", info->getAccount());
+	////ADDUSER("pwd", info->getPwd());
+	////ADDUSER("status", info->getStatus());
+	////ADDUSER("siteurl", info->getSiteurl());
+	//ADDUSER("schoolname", info->getSchoolname());
+	//ADDUSER("categoryName", info->getCategoryName());
+	//ADDUSER("ledgeName", info->getLedgeName());
+	//ADDUSER("bankname", info->getBankname());
+
+	m_pdb->Close();
+}
+
+void CUserControler::GetUserFromDB(CUserInfo* info)
+{
+	CSQLiteUtils* m_pdb = new CSQLiteUtils();
+	int nRes = m_pdb->Open("..\\ListDemo\\login.db3");
+	if (nRes != SQLITE_OK)
+	{
+		MessageBox(NULL, L"无法打开数据库", L"错误", MB_OK);
+		return;
+	}
+	string msg = m_pdb->SelectUser("xhl");
+	msg = m_stringutils.U8ToUnicode(msg);
+	
 }
 
 
