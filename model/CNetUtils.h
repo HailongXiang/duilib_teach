@@ -14,7 +14,7 @@ public:
 	string Redirect(const string& url);
 	string DownloadQRC(string& qrc_url);
 
-public:
+private:
 	CStringUtils m_stringutils;
 
 };

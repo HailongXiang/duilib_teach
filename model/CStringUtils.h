@@ -10,6 +10,7 @@ public:
 
 	void CutKeyValue(string& msg);
 	string U8ToUnicode(const string& szU8);
+	string G2U(const char* gb2312);
 	string GetKeyValue(const string& msg, string key);
 };
 
