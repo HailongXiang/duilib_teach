@@ -2,6 +2,7 @@
 #include "CUserControler.h"
 #define MSG_NULL "0"
 #define MSG_OK "1"
+#define MSG_LOCAL "2"
 
 
 
@@ -12,13 +13,18 @@ CUserControler::CUserControler()
 #define K_V(name) m_stringutils.GetKeyValue(msg, name)
 void CUserControler::ParseFromJson(string& url, CUserInfo* info,string infofilename)
 {
-	string msg = m_netutils.Redirect(url);
+	msg = m_netutils.Redirect(url);
 	if (msg == MSG_NULL)
 	{
-		//GetUserInfoFromFile(info, INFOFILENAME);
+		//GetUserInfoFromFile(info, infofilename);
 		GetUserFromDB(info);
-		SetK_V(info, msg);
-		info->setCode(MSG_NULL);
+		if (msg != MSG_NULL)
+		{
+			SetK_V(info, msg);
+			info->setCode(MSG_LOCAL);
+		}
+		else
+			info->setCode(MSG_NULL);
 		return;
 	}
 	info->setCode(K_V("code"));
@@ -125,9 +131,10 @@ void CUserControler::GetUserFromDB(CUserInfo* info)
 		MessageBox(NULL, L"无法打开数据库", L"错误", MB_OK);
 		return;
 	}
-	string msg = m_pdb->SelectUser("xhl");
+	msg = m_pdb->SelectUser("xhl");
 	msg = m_stringutils.U8ToUnicode(msg);
-	
+
+	m_pdb->Close();
 }
 
 

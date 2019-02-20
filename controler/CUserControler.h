@@ -30,5 +30,6 @@ private:
 	CStringUtils m_stringutils;
 	CNetUtils m_netutils;
 	sqlite3* m_pdb;
+	string msg;
 };
 

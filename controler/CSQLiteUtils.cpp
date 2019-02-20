@@ -117,8 +117,8 @@ string CSQLiteUtils::SelectUser(string account)
 
 	if (res != SQLITE_OK)
 	{
-		//MessageBox(NULL, (LPCWSTR)cErrMsg, L"select fail:", NULL);
-		return NULL;
+		MessageBox(NULL, (LPCWSTR)cErrMsg, L"select fail:", NULL);
+		return "0";
 	}
 
 	return my_info;
